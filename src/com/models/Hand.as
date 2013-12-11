@@ -56,7 +56,6 @@ package com.models
 
     public function flip(cardName:String):void {
       for each(var card:Card in _cards) {
-        trace(card.toString);
         if(card.toString() == "XX")
           card.flip(cardName);
       }

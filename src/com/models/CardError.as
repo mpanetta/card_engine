@@ -10,6 +10,7 @@ package com.models
 
     public static const NUM_ALREADY_SET:String = "Num has already been set and cannot be set again.";
     public static const ALREADY_DISPOSED:String = "Object already disposed.";
+    public static const MUST_OVERRIDE:String = "Method must be overriden in derived class.";
 
     //
     // Instance variables.

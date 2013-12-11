@@ -2,6 +2,7 @@ package com.views
 {
   import com.engine.Engine;
   import com.events.CardMessage;
+  import com.models.CardError;
   import com.models.Hand;
   import com.models.Table;
 
@@ -9,6 +10,7 @@ package com.views
 
   import starling.display.Image;
   import starling.display.Sprite;
+  import starling.events.Event;
   import starling.textures.Texture;
 
   public class TableView extends Sprite
@@ -16,11 +18,6 @@ package com.views
     //
     // Constants.
     //
-
-    [Embed(source = "../../../assets/images/background.jpeg")]
-    private static const Background:Class;
-
-    private const POSITIONS:Array = [{ x:345, y:125 }, { x:345, y:450 }];
 
     //
     // Instance variables.
@@ -36,7 +33,6 @@ package com.views
     public function TableView(table:Table) {
       _table = table;
 
-      setBackground();
       register();
     }
 
@@ -51,43 +47,57 @@ package com.views
     //
 
     protected function get seatIndexOffset():int { return 1; }
+    protected function get positions():Array { throw new CardError(CardError.MUST_OVERRIDE, " method: positions"); }
+    protected function get backgroundClass():Class { throw new CardError(CardError.MUST_OVERRIDE, " method: backgroundClass"); }
 
     //
     // Public methods.
     //
 
     public function resize():void {
+      if(!_backgroundImage) return;
+
       _backgroundImage.width = Engine.instance.width;
       _backgroundImage.height = Engine.instance.height;
     }
+
+    //
+    // Protected methods.
+    //
 
     //
     // Private methods.
     //
 
     private function register():void {
+      addEventListener(Event.ADDED_TO_STAGE, addedToStage);
+
       _table.addEventListener(CardMessage.TABLE_DISPOSED, table_tableDisposed);
       _table.addEventListener(CardMessage.HAND_CREATED, table_handCreated);
     }
 
     private function unregister():void {
+      removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
+
       _table.removeEventListener(CardMessage.TABLE_DISPOSED, table_tableDisposed);
       _table.removeEventListener(CardMessage.HAND_CREATED, table_handCreated);
     }
 
-    private function setBackground():void {
-      _backgroundImage = new Image(Texture.fromBitmap(new Background() as Bitmap));
-
-      addChild(_backgroundImage);
-    }
-
     private function addHand(hand:Hand):void {
       var view:HandView = new HandView(hand);
-      var pos:Object = POSITIONS[hand.seat + seatIndexOffset];
+      var pos:Object = positions[hand.seat + seatIndexOffset];
       addChild(view);
 
       view.x = pos.x;
       view.y = pos.y;
+    }
+
+    private function setBackground():void {
+      if(_backgroundImage) return;
+
+      _backgroundImage = new Image(Texture.fromBitmap(new backgroundClass()as Bitmap));
+
+      addChild(_backgroundImage);
     }
 
     //
@@ -100,6 +110,10 @@ package com.views
 
     private function table_handCreated(event:CardMessage):void {
       addHand(event.hand);
+    }
+
+    private function addedToStage(event:Event):void {
+      setBackground();
     }
   }
 }
