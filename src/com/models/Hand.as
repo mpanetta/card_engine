@@ -1,6 +1,7 @@
 package com.models
 {
   import com.core.dataStructures.ArrayHelper;
+  import com.core.dataStructures.Hash;
   import com.events.CardMessage;
 
   import flash.events.EventDispatcher;
@@ -15,9 +16,9 @@ package com.models
     // Instance variables.
     //
 
-    private var _cards:Array = [];
+    private var _cards:Hash = new Hash();
     private var _id:Number = -1;
-    private var _seat:int = -1
+    private var _seat:int = -1;
 
     //
     // Constructors.
@@ -33,6 +34,8 @@ package com.models
     }
 
     public function dispose():void {
+      _cards.clear();
+
       unregister();
     }
 
@@ -40,29 +43,46 @@ package com.models
     // Getters and setters.
     //
 
-    public function get id():Number { return id; }
+    public function get id():Number { return _id; }
     public function get seat():int { return _seat; }
-    public function get cards():Array { return _cards; }
+    public function get cards():Array { return _cards.values; }
 
     //
     // Public methods.
     //
 
     public function addCard(card:Card):void {
-      _cards.push(card);
+      if(_cards[card.id])
+        throw new CardError(CardError.MULTIPLE_ID, "");
+
+      _cards[card.id] = card;
 
       dispatchCardAdded(card);
     }
 
-    public function flip(cardName:String):void {
-      for each(var card:Card in _cards) {
-        if(card.toString() == "XX")
-          card.flip(cardName);
-      }
+    public function removeCard(cardId:Number):void {
+      if(!_cards[cardId])
+        throw new CardError(CardError.NO_ID, cardId.toString());
+
+      delete _cards[cardId];
+
+      dispatchCardRemoved(cardId);
+    }
+
+    public function flip(cardId:Number, cardName:String):void {
+      _cards[cardId].flip(cardName);
+    }
+
+    public function raise(cardId:Number):void {
+      _cards[cardId].raise();
+    }
+
+    public function lower(cardId:Number):void {
+      _cards[cardId].lower();
     }
 
     public override function toString():String {
-      return ArrayHelper.collect(_cards, function(card:Card):String { return card.toString(); }).join(', ');
+      return ArrayHelper.collect(cards, function(card:Card):String { return card.toString(); }).join(', ');
     }
 
     //
@@ -77,6 +97,10 @@ package com.models
 
     private function dispatchCardAdded(card:Card=null):void {
       dispatchEvent(new CardMessage(CardMessage.CARD_ADDED, { hand:this, card:card }));
+    }
+
+    private function dispatchCardRemoved(cardId:Number):void {
+      dispatchEvent(new CardMessage(CardMessage.CARD_REMOVED, { handId:id, cardId:cardId }));
     }
 
     private function dispatchCreated():void {

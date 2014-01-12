@@ -36,7 +36,7 @@ package com.managers
     public static function get instance():CardManager {
       if(_instance) return _instance;
 
-      throw new ErrorBase(ErrorBase.UNINITIALIZED, "");
+      throw new ErrorBase(ErrorBase.UNINITIALIZED, "CardManager");
     }
 
     //
@@ -50,8 +50,9 @@ package com.managers
     public function createStandardDeck():Deck {
       var deck:Deck = new Deck();
       for(var i:int = 0; i < 52; i++) {
-        var card:Card = new Card(standardNameFor(i), false);
+        var card:Card = new Card(standardNameFor(i), false, i, standardFaceFor(i), standardSuitFor(i), valueFor(i));
         deck.addCard(card);
+        trace("CARD: " + card.face + card.suit + " POINTS: " + card.value);
       }
 
       return deck;
@@ -88,6 +89,11 @@ package com.managers
       if(i <= 38) return 'd';
 
       return 'c';
+    }
+
+    private function valueFor(i):int {
+      var x:int = i % 13;
+      return i == 0 ? 13 : x;
     }
 
     //

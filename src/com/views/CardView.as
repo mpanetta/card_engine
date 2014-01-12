@@ -1,14 +1,15 @@
 package com.views
 {
+  import com.core.scene.ViewBase;
   import com.events.CardMessage;
   import com.models.Card;
 
   import starling.display.Image;
-  import starling.display.Sprite;
+  import starling.events.Touch;
   import starling.textures.Texture;
   import starling.textures.TextureAtlas;
 
-  public class CardView extends Sprite
+  public class CardView extends ViewBase
   {
     //
     // Constants.
@@ -55,9 +56,20 @@ package com.views
     // Getters and setters.
     //
 
+    public function get id():Number { return _card.id; }
+
     //
     // Public methods.
     //
+
+    //
+    // Protected methods.
+    //
+
+    protected override function handleEnded(touch:Touch):void {
+      if(touch)
+        dispatchCardClicked();
+    }
 
     //
     // Private methods.
@@ -65,10 +77,14 @@ package com.views
 
     private function register():void {
       _card.addEventListener(CardMessage.CARD_FLIPPED, card_cardFlipped);
+      _card.addEventListener(CardMessage.CARD_RAISED, card_cardRaised);
+      _card.addEventListener(CardMessage.CARD_LOWERED, card_cardLowered);
     }
 
     private function unregister():void {
       _card.removeEventListener(CardMessage.CARD_FLIPPED, card_cardFlipped);
+      _card.removeEventListener(CardMessage.CARD_RAISED, card_cardRaised);
+      _card.removeEventListener(CardMessage.CARD_LOWERED, card_cardLowered);
     }
 
     private function createAtlas():void {
@@ -76,6 +92,7 @@ package com.views
 
       var texture:Texture = Texture.fromBitmap(new CardTexture());
       var xml:XML = XML(new CardXml());
+
       _atlas = new TextureAtlas(texture, xml);
     }
 
@@ -89,17 +106,29 @@ package com.views
     private function update():void {
       if(_image) {
         removeChild(_image);
+
         _image.texture.dispose();
         _image.dispose();
         _image = null;
       }
 
-      _image = imageFor(_card.imageFile);
-      addChild(_image);
+      _image = addChild(imageFor(_card.imageFile)) as Image;
+    }
+
+    private function raise():void {
+      y -= 20;
+    }
+
+    private function lower():void {
+      y += 20;
     }
 
     private function imageFor(name:String):Image {
       return new Image(_atlas.getTexture(name));
+    }
+
+    private function dispatchCardClicked():void {
+      dispatcher.dispatchEvent(new CardMessage(CardMessage.CARD_CLICKED, { cardId:id }));
     }
 
     //
@@ -108,6 +137,14 @@ package com.views
 
     private function card_cardFlipped(message:CardMessage):void {
       update();
+    }
+
+    private function card_cardRaised(message:CardMessage):void {
+      raise();
+    }
+
+    private function card_cardLowered(message:CardMessage):void {
+      lower();
     }
   }
 }

@@ -37,15 +37,30 @@ package com.models
     // Public methods.
     //
 
-    public function deal(id:Number, cardName:String, seat:int, faceUp:Boolean):void {
+    public function deal(id:Number, cardName:String, seat:int, faceUp:Boolean, cardId:Number):void {
       var hand:Hand = getHand(id, seat);
 
-      hand.addCard(new Card(cardName, faceUp));
+      hand.addCard(new Card(cardName, faceUp, cardId));
     }
 
-    public function flip(seat:Number, cardName:String):void {
+    public function flip(seat:Number, cardName:String, cardId:Number):void {
       var hand:Hand = _hands[seat];
-      hand.flip(cardName);
+      hand.flip(cardId, cardName);
+    }
+
+    public function raise(seat:Number, cardId:Number):void {
+      var hand:Hand = _hands[seat];
+      hand.raise(cardId);
+    }
+
+    public function lower(seat:Number, cardId:Number):void {
+      var hand:Hand = _hands[seat];
+      hand.lower(cardId);
+    }
+
+    public function removeCard(seat:Number, cardId:Number):void {
+      var hand:Hand = _hands[seat];
+      hand.removeCard(cardId);
     }
 
     //

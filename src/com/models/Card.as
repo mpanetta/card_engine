@@ -1,7 +1,5 @@
 package com.models
 {
-  import com.core.dataStructures.ArrayHelper;
-  import com.core.dataStructures.Hash;
   import com.events.CardMessage;
 
   import flash.events.EventDispatcher;
@@ -16,31 +14,29 @@ package com.models
     // Instance variables.
     //
 
-    private static var _count:int = 0;
-    private static var _nextId:Number = 0;
-    private static var _cardsById:Hash = new Hash();
-
     private var _faceUp:Boolean;
     private var _name:String;
     private var _id:Number;
+    private var _face:String;
+    private var _suit:String;
+    private var _raised:Boolean = false;
+    private var _value:int;
 
     //
     // Constructors.
     //
 
-    public function Card(name:String, faceUp:Boolean, id:Number=-1) {
+    public function Card(name:String, faceUp:Boolean, id:Number, face:String=null, suit:String=null, value:int=-1) {
       _faceUp = faceUp;
       _name = name;
+      _id = id;
 
-      setId(id);
-
-      _count++;
+      _face = face;
+      _suit = suit;
+      _value = value;
     }
 
     public function dispose():void {
-      _count--;
-      delete _cardsById[_id];
-
       unregister();
     }
 
@@ -50,6 +46,10 @@ package com.models
 
     public function get imageFile():String { return _faceUp ? "card_" + _name : "b1fv"; }
     public function get id():Number { return _id; }
+    public function get face():String { return _face; }
+    public function get suit():String { return _suit; }
+    public function get value():int { return _value; }
+    public function get faceUp():Boolean { return _faceUp; }
 
     //
     // Public methods.
@@ -59,12 +59,26 @@ package com.models
       return _faceUp ? _name : "XX";
     }
 
-    public function flip(name:String):void {
+    public function flip(name:String=null):void {
       _faceUp = _faceUp ? false : true;
       if(name)
         _name = name;
 
       dispatchEvent(new CardMessage(CardMessage.CARD_FLIPPED, {}));
+    }
+
+    public function raise():void {
+      if(_raised) return;
+
+      _raised = true;
+      dispatchEvent(new CardMessage(CardMessage.CARD_RAISED, {}));
+    }
+
+    public function lower():void {
+      if(!_raised) return;
+
+      _raised = false;
+      dispatchEvent(new CardMessage(CardMessage.CARD_LOWERED, {}));
     }
 
     //
@@ -77,23 +91,6 @@ package com.models
 
     private function unregister():void {
 
-    }
-
-    private function setId(newId):void {
-      if(newId != -1 && _cardsById[newId] != null)
-        throw new CardError(CardError.MULTIPLE_ID, " id: " + newId);
-
-      _id = newId == -1 ? incrementCount() : newId;
-      _cardsById[newId] = this;
-    }
-
-    private function incrementCount():Number {
-      var numbers:Array = _cardsById.keys;
-      while(ArrayHelper.includes(numbers, _nextId)) {
-        _nextId++;
-      }
-
-      return _nextId;
     }
 
     //

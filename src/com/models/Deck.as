@@ -26,7 +26,7 @@ package com.models
     // Getters and setters.
     //
 
-    public function get count():int { return _cards.count; }
+    public function get count():int { return _cards.length; }
 
     //
     // Public methods.

@@ -1,5 +1,7 @@
 package com.views
 {
+  import com.core.dataStructures.Hash;
+  import com.core.scene.ViewBase;
   import com.engine.Engine;
   import com.events.CardMessage;
   import com.models.CardError;
@@ -9,11 +11,10 @@ package com.views
   import flash.display.Bitmap;
 
   import starling.display.Image;
-  import starling.display.Sprite;
   import starling.events.Event;
   import starling.textures.Texture;
 
-  public class TableView extends Sprite
+  public class TableView extends ViewBase
   {
     //
     // Constants.
@@ -25,6 +26,7 @@ package com.views
 
     private var _table:Table;
     private var _backgroundImage:Image;
+    private var _hands:Hash = new Hash();
 
     //
     // Constructors.
@@ -37,6 +39,7 @@ package com.views
     }
 
     public override function dispose():void {
+      cleanupHands();
       unregister();
 
       super.dispose();
@@ -65,6 +68,10 @@ package com.views
     // Protected methods.
     //
 
+    protected function handleCardSelected(cardId:Number, handId:Number):void {
+      dispatcher.dispatchEvent(new CardMessage(CardMessage.CARD_CLICKED, { cardId:cardId, handId:handId }));
+    }
+
     //
     // Private methods.
     //
@@ -84,20 +91,38 @@ package com.views
     }
 
     private function addHand(hand:Hand):void {
-      var view:HandView = new HandView(hand);
+      var view:HandView = addChild(new HandView(hand)) as HandView;
+      _hands[hand.id] = _hands;
+
+      addHandListeners(view);
+
       var pos:Object = positions[hand.seat + seatIndexOffset];
-      addChild(view);
 
       view.x = pos.x;
       view.y = pos.y;
     }
 
     private function setBackground():void {
-      if(_backgroundImage) return;
+      if(_backgroundImage || !backgroundClass) return;
 
-      _backgroundImage = new Image(Texture.fromBitmap(new backgroundClass()as Bitmap));
+      _backgroundImage = new Image(Texture.fromBitmap(new backgroundClass() as Bitmap));
 
       addChild(_backgroundImage);
+    }
+
+    private function addHandListeners(hand:HandView):void {
+      hand.addListener(CardMessage.CARD_CLICKED, hand_cardClicked);
+    }
+
+    private function removeHandListeners(hand:HandView):void {
+      hand.removeListener(CardMessage.CARD_CLICKED, hand_cardClicked);
+    }
+
+    private function cleanupHands():void {
+      for each(var hand:HandView in _hands.values)
+        removeHandListeners(hand);
+
+      _hands.clear();
     }
 
     //
@@ -106,6 +131,10 @@ package com.views
 
     private function table_tableDisposed(message:CardMessage):void {
       dispose();
+    }
+
+    private function hand_cardClicked(message:CardMessage):void {
+      handleCardSelected(message.cardId, message.handId);
     }
 
     private function table_handCreated(event:CardMessage):void {
