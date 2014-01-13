@@ -93,7 +93,7 @@ package com.managers
 
     private function valueFor(i):int {
       var x:int = i % 13;
-      return i == 0 ? 13 : x;
+      return x == 0 ? 13 : x;
     }
 
     //
