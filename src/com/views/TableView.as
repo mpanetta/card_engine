@@ -11,8 +11,10 @@ package com.views
   import flash.display.Bitmap;
 
   import starling.display.Image;
+  import starling.display.Sprite;
   import starling.events.Event;
   import starling.textures.Texture;
+  import starling.utils.deg2rad;
 
   public class TableView extends ViewBase
   {
@@ -25,6 +27,8 @@ package com.views
     //
 
     private var _table:Table;
+    private var _backgroundLayer:Sprite;
+    private var _playLayer:Sprite;
     private var _backgroundImage:Image;
     private var _hands:Hash = new Hash();
 
@@ -34,6 +38,7 @@ package com.views
 
     public function TableView(table:Table) {
       _table = table;
+      createLayers();
 
       register();
     }
@@ -49,19 +54,21 @@ package com.views
     // Getters and setters.
     //
 
+    protected function get hands():Array { return _hands.values; }
     protected function get seatIndexOffset():int { return 1; }
     protected function get positions():Array { throw new CardError(CardError.MUST_OVERRIDE, " method: positions"); }
     protected function get backgroundClass():Class { throw new CardError(CardError.MUST_OVERRIDE, " method: backgroundClass"); }
+    protected function get appWidth():Number { return Engine.instance.appWidth; }
+    protected function get appHeight():Number { return Engine.instance.appHeight; }
 
     //
     // Public methods.
     //
 
-    public function resize():void {
-      if(!_backgroundImage) return;
-
-      _backgroundImage.width = Engine.instance.width;
-      _backgroundImage.height = Engine.instance.height;
+    public function resize(newWidth:Number, newHeight:Number):void {
+      scaleBackground(newWidth, newHeight);
+      scalePlayLayer(newWidth, newHeight);
+      positionHands();
     }
 
     //
@@ -90,24 +97,33 @@ package com.views
       _table.removeEventListener(CardMessage.HAND_CREATED, table_handCreated);
     }
 
-    private function addHand(hand:Hand):void {
-      var view:HandView = addChild(new HandView(hand)) as HandView;
-      _hands[hand.id] = _hands;
+    private function build():void {
+      setBackground();
+    }
 
-      addHandListeners(view);
-
-      var pos:Object = positions[hand.seat + seatIndexOffset];
-
-      view.x = pos.x;
-      view.y = pos.y;
+    private function createLayers():void {
+      _backgroundLayer = addChild(new Sprite()) as Sprite;
+      _playLayer = addChild(new Sprite()) as Sprite;
     }
 
     private function setBackground():void {
       if(_backgroundImage || !backgroundClass) return;
 
       _backgroundImage = new Image(Texture.fromBitmap(new backgroundClass() as Bitmap));
+      _backgroundImage.pivotX = _backgroundImage.width / 2;
+      _backgroundImage.pivotY = _backgroundImage.height / 2;
 
-      addChild(_backgroundImage);
+      _backgroundLayer.addChild(_backgroundImage);
+    }
+
+    private function addHand(hand:Hand):void {
+      var pos:Object = positions[hand.seat + seatIndexOffset];
+      var view:HandView = _playLayer.addChild(new HandView(hand, pos.fanWidth)) as HandView;
+      _hands[hand.id] = view;
+
+      view.rotation = deg2rad(pos.rotation);
+      addHandListeners(view);
+      positionView(view, pos.x, pos.y);
     }
 
     private function addHandListeners(hand:HandView):void {
@@ -125,8 +141,52 @@ package com.views
       _hands.clear();
     }
 
+    private function scaleBackground(newWidth:Number, newHeight:Number):void {
+      if(!_backgroundImage) return;
+
+      var scale:Number = newHeight / (_backgroundImage.height / _backgroundImage.scaleX);
+
+      _backgroundImage.scaleX = scale;
+      _backgroundImage.scaleY = scale;
+      _backgroundImage.x = newWidth / 2;
+      _backgroundImage.y = newHeight / 2;
+    }
+
+    private function scalePlayLayer(newWidth:Number, newHeight:Number):void {
+      var scale:Number = 1;
+      var scaledX:Number = newWidth / appWidth;
+      var scaledY:Number = newHeight / appHeight;
+
+      if(newHeight > newWidth) {
+        scale = scaledX;
+
+        _playLayer.x = 0;
+        _playLayer.y = ((appHeight * scaledX) - (appHeight * scaledY)) / 2
+      } else {
+        scale = scaledY;
+
+        _playLayer.x =  (scaledX - scaledY) * appWidth / 2
+        _playLayer.y = 0;
+      }
+
+      _playLayer.scaleX = scale;
+      _playLayer.scaleY = scale;
+    }
+
+    private function positionHands():void {
+      for each(var hand:HandView in hands) {
+        var position:Object = positions[hand.seat + seatIndexOffset];
+        positionView(hand, position.x, position.y);
+      }
+    }
+
+    private function positionView(hand:HandView, xPos:int, yPos:int):void {
+      hand.x = xPos;
+      hand.y = yPos;
+    }
+
     //
-    // Event handlers.
+    // Event handlers.582.75
     //
 
     private function table_tableDisposed(message:CardMessage):void {

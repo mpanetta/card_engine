@@ -20,6 +20,7 @@ package com.views
     private static var _count:int = 0;
 
     private var _hand:Hand;
+    private var _fanWidth:int;
     private var _disposed:Boolean = false;
     private var _cards:Hash = new Hash();
 
@@ -27,8 +28,9 @@ package com.views
     // Constructors.
     //
 
-    public function HandView(hand:Hand) {
+    public function HandView(hand:Hand, fanWidth:int) {
       _hand = hand;
+      _fanWidth = fanWidth;
       _count++;
 
       setCards();
@@ -56,6 +58,9 @@ package com.views
     //
 
     public function get id():Number { return _hand.id; }
+    public function get seat():int { return _hand.seat; }
+
+    private function get fanIncrement():Number { return (_fanWidth / _hand.cards.length); }
 
     //
     // Public methods.
@@ -95,7 +100,7 @@ package com.views
       addCardListeners(cardView);
 
       _cards[cardView.id] = cardView;
-      cardView.x = _hand.cards.length * 20;
+      fan();
     }
 
     private function removeCard(id:Number):void {
@@ -104,10 +109,14 @@ package com.views
 
       delete _cards[id];
 
-      var i:int = 1;
-      for each(card in _cards.values) {
+      fan();
+    }
+
+    private function fan():void {
+      var i:int = 0;
+      for each(var card:CardView in _cards.values) {
         addChild(card);
-        card.x = i * 20;
+        card.x = i * fanIncrement;
         i++;
       }
     }

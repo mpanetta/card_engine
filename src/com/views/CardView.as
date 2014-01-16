@@ -2,7 +2,10 @@ package com.views
 {
   import com.core.scene.ViewBase;
   import com.events.CardMessage;
+  import com.managers.CardManager;
   import com.models.Card;
+
+  import flash.display.Bitmap;
 
   import starling.display.Image;
   import starling.events.Touch;
@@ -90,7 +93,8 @@ package com.views
     private function createAtlas():void {
       if(_count != 1) return;
 
-      var texture:Texture = Texture.fromBitmap(new CardTexture());
+      var bitmap:Bitmap = new CardTexture();
+      var texture:Texture = Texture.fromBitmap(bitmap);
       var xml:XML = XML(new CardXml());
 
       _atlas = new TextureAtlas(texture, xml);
@@ -113,6 +117,7 @@ package com.views
       }
 
       _image = addChild(imageFor(_card.imageFile)) as Image;
+      scaleImage();
     }
 
     private function raise():void {
@@ -129,6 +134,22 @@ package com.views
 
     private function dispatchCardClicked():void {
       dispatcher.dispatchEvent(new CardMessage(CardMessage.CARD_CLICKED, { cardId:id }));
+    }
+
+    private function scaleImage():void {
+//      var width:Number = _image.width;
+//      var height:Number = _image.height;
+//
+//      var scale:Number = 1;
+//
+//      if(height < width) {
+//        scale = CardManager.instance.cardWidth / width;
+//      } else {
+//        scale = CardManager.instance.cardHeight / height;
+//      }
+//
+//      _image.scaleX = scale;
+//      _image.scaleY = scale;
     }
 
     //

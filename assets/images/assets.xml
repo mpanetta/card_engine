@@ -1,71 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
-<!-- $TexturePacker:SmartUpdate:709a07f788f1c86af5daf9e7daa4beaa:093abe1cd868cddad2978f6895155c7b:57ef0b4f36012e2dacefebfa7d58e2d4$ -->
-<TextureAtlas imagePath="assets.png">
-    <SubTexture name="b1fh" x="2" y="340" width="48" height="36"/>
-    <SubTexture name="b1fv" x="192" y="452" width="36" height="48"/>
-    <SubTexture name="b1pb" x="2" y="402" width="48" height="6"/>
-    <SubTexture name="b1pl" x="60" y="302" width="6" height="48"/>
-    <SubTexture name="b1pr" x="52" y="302" width="6" height="48"/>
-    <SubTexture name="b1pt" x="2" y="394" width="48" height="6"/>
-    <SubTexture name="b2fh" x="2" y="302" width="48" height="36"/>
-    <SubTexture name="b2fv" x="192" y="402" width="36" height="48"/>
-    <SubTexture name="b2pb" x="2" y="386" width="48" height="6"/>
-    <SubTexture name="b2pl" x="40" y="252" width="6" height="48"/>
-    <SubTexture name="b2pr" x="40" y="202" width="6" height="48"/>
-    <SubTexture name="b2pt" x="2" y="378" width="48" height="6"/>
-    <SubTexture name="card_10c" x="192" y="352" width="36" height="48"/>
-    <SubTexture name="card_10d" x="204" y="252" width="36" height="48"/>
-    <SubTexture name="card_10h" x="204" y="202" width="36" height="48"/>
-    <SubTexture name="card_10s" x="192" y="302" width="36" height="48"/>
-    <SubTexture name="card_2c" x="192" y="152" width="36" height="48"/>
-    <SubTexture name="card_2d" x="192" y="102" width="36" height="48"/>
-    <SubTexture name="card_2h" x="192" y="52" width="36" height="48"/>
-    <SubTexture name="card_2s" x="192" y="2" width="36" height="48"/>
-    <SubTexture name="card_3c" x="154" y="452" width="36" height="48"/>
-    <SubTexture name="card_3d" x="154" y="402" width="36" height="48"/>
-    <SubTexture name="card_3h" x="154" y="352" width="36" height="48"/>
-    <SubTexture name="card_3s" x="166" y="252" width="36" height="48"/>
-    <SubTexture name="card_4c" x="166" y="202" width="36" height="48"/>
-    <SubTexture name="card_4d" x="154" y="302" width="36" height="48"/>
-    <SubTexture name="card_4h" x="154" y="152" width="36" height="48"/>
-    <SubTexture name="card_4s" x="154" y="102" width="36" height="48"/>
-    <SubTexture name="card_5c" x="154" y="52" width="36" height="48"/>
-    <SubTexture name="card_5d" x="154" y="2" width="36" height="48"/>
-    <SubTexture name="card_5h" x="116" y="452" width="36" height="48"/>
-    <SubTexture name="card_5s" x="116" y="402" width="36" height="48"/>
-    <SubTexture name="card_6c" x="116" y="352" width="36" height="48"/>
-    <SubTexture name="card_6d" x="128" y="252" width="36" height="48"/>
-    <SubTexture name="card_6h" x="128" y="202" width="36" height="48"/>
-    <SubTexture name="card_6s" x="116" y="302" width="36" height="48"/>
-    <SubTexture name="card_7c" x="116" y="152" width="36" height="48"/>
-    <SubTexture name="card_7d" x="116" y="102" width="36" height="48"/>
-    <SubTexture name="card_7h" x="116" y="52" width="36" height="48"/>
-    <SubTexture name="card_7s" x="116" y="2" width="36" height="48"/>
-    <SubTexture name="card_8c" x="78" y="452" width="36" height="48"/>
-    <SubTexture name="card_8d" x="78" y="402" width="36" height="48"/>
-    <SubTexture name="card_8h" x="78" y="352" width="36" height="48"/>
-    <SubTexture name="card_8s" x="90" y="252" width="36" height="48"/>
-    <SubTexture name="card_9c" x="90" y="202" width="36" height="48"/>
-    <SubTexture name="card_9d" x="78" y="302" width="36" height="48"/>
-    <SubTexture name="card_9h" x="52" y="252" width="36" height="48"/>
-    <SubTexture name="card_9s" x="78" y="152" width="36" height="48"/>
-    <SubTexture name="card_ac" x="78" y="102" width="36" height="48"/>
-    <SubTexture name="card_ad" x="78" y="52" width="36" height="48"/>
-    <SubTexture name="card_ah" x="78" y="2" width="36" height="48"/>
-    <SubTexture name="card_as" x="52" y="202" width="36" height="48"/>
-    <SubTexture name="card_jc" x="40" y="152" width="36" height="48"/>
-    <SubTexture name="card_jd" x="40" y="102" width="36" height="48"/>
-    <SubTexture name="card_jh" x="40" y="52" width="36" height="48"/>
-    <SubTexture name="card_joker1" x="40" y="2" width="36" height="48"/>
-    <SubTexture name="card_joker2" x="40" y="460" width="36" height="48"/>
-    <SubTexture name="card_js" x="2" y="460" width="36" height="48"/>
-    <SubTexture name="card_kc" x="40" y="410" width="36" height="48"/>
-    <SubTexture name="card_kd" x="2" y="410" width="36" height="48"/>
-    <SubTexture name="card_kh" x="2" y="252" width="36" height="48"/>
-    <SubTexture name="card_ks" x="2" y="202" width="36" height="48"/>
-    <SubTexture name="card_qc" x="2" y="152" width="36" height="48"/>
-    <SubTexture name="card_qd" x="2" y="102" width="36" height="48"/>
-    <SubTexture name="card_qh" x="2" y="52" width="36" height="48"/>
-    <SubTexture name="card_qs" x="2" y="2" width="36" height="48"/>
+<!-- Created with TexturePacker http://texturepacker.com-->
+<!-- $TexturePacker:SmartUpdate:a4c4e17eb8e602f3215e90fdbc478736$ -->
+<TextureAtlas imagePath="assets.png ">
+    <SubTexture name="card_10c" x="264" y="1106" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_10d" x="133" y="1842" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_10h" x="133" y="1658" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_10s" x="133" y="1474" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_2c" x="133" y="1290" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_2d" x="133" y="1106" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_2h" x="2" y="1844" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_2s" x="2" y="1660" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_3c" x="2" y="1476" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_3d" x="2" y="1292" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_3h" x="2" y="1108" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_3s" x="788" y="922" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_4c" x="657" y="922" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_4d" x="526" y="922" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_4h" x="395" y="922" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_4s" x="264" y="922" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_5c" x="2" y="924" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_5d" x="133" y="922" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_5h" x="788" y="738" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_5s" x="657" y="738" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_6c" x="526" y="738" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_6d" x="395" y="738" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_6h" x="264" y="738" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_6s" x="2" y="740" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_7c" x="133" y="738" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_7d" x="788" y="554" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_7h" x="657" y="554" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_7s" x="526" y="554" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_8c" x="395" y="554" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_8d" x="264" y="554" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_8h" x="2" y="556" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_8s" x="133" y="554" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_9c" x="788" y="370" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_9d" x="657" y="370" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_9h" x="526" y="370" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_9s" x="395" y="370" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_ac" x="264" y="370" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_ad" x="2" y="372" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_ah" x="133" y="370" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_as" x="790" y="186" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="b1fv" x="2" y="2" width="131" height="184"/>
+    <SubTexture name="card_jc" x="659" y="186" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_jd" x="528" y="186" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_jh" x="397" y="186" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_js" x="266" y="186" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_kc" x="2" y="188" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_kd" x="135" y="186" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_kh" x="790" y="2" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_ks" x="659" y="2" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_qc" x="528" y="2" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_qd" x="397" y="2" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_qh" x="266" y="2" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
+    <SubTexture name="card_qs" x="135" y="2" width="129" height="182" frameX="-1" frameY="-1" frameWidth="131" frameHeight="184"/>
 </TextureAtlas>

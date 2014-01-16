@@ -1,5 +1,6 @@
 package com.managers
 {
+  import com.core.dataStructures.ArrayHelper;
   import com.core.error.ErrorBase;
   import com.models.Card;
   import com.models.CardError;
@@ -30,6 +31,9 @@ package com.managers
     }
 
     public static function initialize(options:Object=null):void {
+      if(_instance)
+        throw new ErrorBase(ErrorBase.MULTIPLE_INITIALIZE, "CardManager");
+
       _instance = new CardManager(new SingletonBlocker, options);
     }
 
@@ -43,6 +47,9 @@ package com.managers
     // Getters and setters.
     //
 
+    public function get cardWidth():int { return _options.hasOwnProperty("cardWidth") ? _options.cardWidth : 50; }
+    public function get cardHeight():int { return _options.hasOwnProperty("cardHeight") ? _options.cardHeight : 100; }
+
     //
     // Public methods.
     //
@@ -52,10 +59,21 @@ package com.managers
       for(var i:int = 0; i < 52; i++) {
         var card:Card = new Card(standardNameFor(i), false, i, standardFaceFor(i), standardSuitFor(i), valueFor(i));
         deck.addCard(card);
-        trace("CARD: " + card.face + card.suit + " POINTS: " + card.value);
       }
 
       return deck;
+    }
+
+    public function findCard(cards:Array, face:String, suit:String):Card {
+      return ArrayHelper.find(cards, function(card:Card):Boolean { return card.face == face && card.suit == suit }) as Card;
+    }
+
+    public function findBySuit(cards:Array, suit:String):Array {
+      return ArrayHelper.select(cards, function(card:Card):Boolean { return card.suit == suit });
+    }
+
+    public function rejectBySuit(cards:Array, suit:String):Array {
+      return ArrayHelper.reject(cards, function(card:Card):Boolean { return card.suit == suit });
     }
 
     //
