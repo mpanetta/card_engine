@@ -19,6 +19,7 @@ package com.events
     public static const CARD_CLICKED:String = "CARD_MESSAGE_CARD_CLICKED";
     public static const CARD_RAISED:String = "CARD_MESSAGE_CARD_RAISED";
     public static const CARD_LOWERED:String = "CARD_MESSAGE_CARD_LOWERED";
+    public static const HAND_SORTED:String = "CARD_MESSAGE_HAND_SORTED";
 
     //
     // Instance variables.
@@ -41,6 +42,8 @@ package com.events
     public function get card():Card { return data.card; }
     public function get cardId():Number { return data.cardId; }
     public function get handId():Number { return data.handId; }
+    public function get sortedCards():Array { return data.sortedCards; }
+    public function get animate():Boolean { return data.animate; }
 
     //
     // Public methods.

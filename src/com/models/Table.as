@@ -43,6 +43,12 @@ package com.models
       hand.addCard(new Card(cardName, faceUp, cardId));
     }
 
+    public function sort(handId:Number, seat:int, sortedCards:Array, animate:Boolean):void {
+      var hand:Hand = getHand(handId, seat);
+
+      hand.sort(sortedCards, animate);
+    }
+
     public function flip(seat:Number, cardName:String, cardId:Number):void {
       var hand:Hand = _hands[seat];
       hand.flip(cardId, cardName);

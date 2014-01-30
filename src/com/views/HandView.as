@@ -7,6 +7,10 @@ package com.views
   import com.models.CardError;
   import com.models.Hand;
 
+  import starling.animation.Transitions;
+  import starling.animation.Tween;
+  import starling.core.Starling;
+
   public class HandView extends ViewBase
   {
     //
@@ -81,11 +85,13 @@ package com.views
     private function register():void {
       _hand.addEventListener(CardMessage.CARD_ADDED, hand_cardAdded);
       _hand.addEventListener(CardMessage.CARD_REMOVED, hand_cardRemoved);
+      _hand.addEventListener(CardMessage.HAND_SORTED, hand_handSorted);
     }
 
     private function unregister():void {
       _hand.removeEventListener(CardMessage.CARD_ADDED, hand_cardAdded);
       _hand.removeEventListener(CardMessage.CARD_REMOVED, hand_cardRemoved);
+      _hand.removeEventListener(CardMessage.HAND_SORTED, hand_handSorted);
     }
 
     private function setCards():void {
@@ -114,7 +120,10 @@ package com.views
 
     private function fan():void {
       var i:int = 0;
-      for each(var card:CardView in _cards.values) {
+      var card:CardView;
+
+      for each(var id:Number in _hand.order) {
+        card = _cards[id];
         addChild(card);
         card.x = i * fanIncrement;
         i++;
@@ -136,6 +145,32 @@ package com.views
       _cards.clear();
     }
 
+    private function sort(sortedCards:Array, animate:Boolean):void {
+      for each(var view:CardView in _cards.values) {
+        if(animate) {
+          var tween:Tween = new Tween(view, 0.3, Transitions.LINEAR);
+          tween.animate("x", sortIndex(sortedCards, view.id) * fanIncrement);
+          Starling.juggler.add(tween);
+        } else {
+          view.x = sortIndex(sortedCards, view.id) * fanIncrement;
+        }
+      }
+
+      for each(var card:Card in sortedCards) {
+        view = _cards[card.id];
+        addChild(view);
+      }
+    }
+
+    private function sortIndex(sorted:Array, id:Number):int {
+      for(var i:int = 0; i < sorted.length; i++) {
+        if(sorted[i].id == id)
+          return i
+      }
+
+      throw new CardError(CardError.NO_ID, "Couldn't fund id: " + id);
+    }
+
     //
     // Event handlers.
     //
@@ -150,6 +185,10 @@ package com.views
 
     private function card_cardClicked(message:CardMessage):void {
       handleCardClicked(message.cardId);
+    }
+
+    private function hand_handSorted(message:CardMessage):void {
+      sort(message.sortedCards, message.animate);
     }
   }
 }

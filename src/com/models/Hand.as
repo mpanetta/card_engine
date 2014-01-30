@@ -19,6 +19,7 @@ package com.models
     private var _cards:Hash = new Hash();
     private var _id:Number = -1;
     private var _seat:int = -1;
+    private var _order:Array = [];
 
     //
     // Constructors.
@@ -45,7 +46,8 @@ package com.models
 
     public function get id():Number { return _id; }
     public function get seat():int { return _seat; }
-    public function get cards():Array { return _cards.values; }
+    public function get cards():Array { return ArrayHelper.collect(_order, function(id:Number):Card { return _cards[id]; }); }
+    public function get order():Array { return _order; }
 
     //
     // Public methods.
@@ -56,6 +58,7 @@ package com.models
         throw new CardError(CardError.MULTIPLE_ID, "");
 
       _cards[card.id] = card;
+      _order.push(card.id);
 
       dispatchCardAdded(card);
     }
@@ -65,6 +68,8 @@ package com.models
         throw new CardError(CardError.NO_ID, cardId.toString());
 
       delete _cards[cardId];
+
+      _order.splice(order.indexOf(cardId), 1);
 
       dispatchCardRemoved(cardId);
     }
@@ -83,6 +88,12 @@ package com.models
 
     public override function toString():String {
       return ArrayHelper.collect(cards, function(card:Card):String { return card.toString(); }).join(', ');
+    }
+
+    public function sort(sortedCards:Array, animate:Boolean):void {
+      _order = ArrayHelper.collect(sortedCards, 'id');
+
+      dispatchHandSorted(sortedCards, animate);
     }
 
     //
@@ -105,6 +116,10 @@ package com.models
 
     private function dispatchCreated():void {
       dispatchEvent(new CardMessage(CardMessage.HAND_CREATED, { hand:this }));
+    }
+
+    private function dispatchHandSorted(sortedCards:Array, animate:Boolean):void {
+      dispatchEvent(new CardMessage(CardMessage.HAND_SORTED, { sortedCards:sortedCards, animate:Boolean }));
     }
 
     //
