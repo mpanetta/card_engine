@@ -20,6 +20,7 @@ package com.events
     public static const CARD_RAISED:String = "CARD_MESSAGE_CARD_RAISED";
     public static const CARD_LOWERED:String = "CARD_MESSAGE_CARD_LOWERED";
     public static const HAND_SORTED:String = "CARD_MESSAGE_HAND_SORTED";
+    public static const HAND_HIDE:String = "CARD_MESSAGE_HAND_HIDE";
 
     //
     // Instance variables.

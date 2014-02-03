@@ -9,6 +9,7 @@ package com.views
   import com.models.Table;
 
   import flash.display.Bitmap;
+  import flash.utils.getDefinitionByName;
 
   import starling.display.Image;
   import starling.display.Sprite;
@@ -60,6 +61,7 @@ package com.views
     protected function get backgroundClass():Class { throw new CardError(CardError.MUST_OVERRIDE, " method: backgroundClass"); }
     protected function get appWidth():Number { return Engine.instance.appWidth; }
     protected function get appHeight():Number { return Engine.instance.appHeight; }
+    protected function get playLayer():Sprite { return _playLayer; }
 
     //
     // Public methods.
@@ -118,7 +120,8 @@ package com.views
 
     private function addHand(hand:Hand):void {
       var pos:Object = positions[hand.seat + seatIndexOffset];
-      var view:HandView = _playLayer.addChild(new HandView(hand, pos.fanWidth)) as HandView;
+      var klass:Class = getDefinitionByName(pos.options.handClass ? pos.options.handClass : "com.views.HandView") as Class;
+      var view:HandView = _playLayer.addChild(new klass(hand, pos.fanWidth, pos.options)) as HandView;
       _hands[hand.id] = view;
 
       view.rotation = deg2rad(pos.rotation);
@@ -186,7 +189,7 @@ package com.views
     }
 
     //
-    // Event handlers.582.75
+    // Event handlers
     //
 
     private function table_tableDisposed(message:CardMessage):void {

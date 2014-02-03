@@ -20,6 +20,7 @@ package com.models
     private var _id:Number = -1;
     private var _seat:int = -1;
     private var _order:Array = [];
+    private var _hidden:Boolean = false;
 
     //
     // Constructors.
@@ -48,6 +49,7 @@ package com.models
     public function get seat():int { return _seat; }
     public function get cards():Array { return ArrayHelper.collect(_order, function(id:Number):Card { return _cards[id]; }); }
     public function get order():Array { return _order; }
+    public function get hidden():Boolean { return _hidden; }
 
     //
     // Public methods.
@@ -96,6 +98,12 @@ package com.models
       dispatchHandSorted(sortedCards, animate);
     }
 
+    public function hide(value:Boolean):void {
+      _hidden = value;
+
+      dispatchHide();
+    }
+
     //
     // Private methods.
     //
@@ -120,6 +128,10 @@ package com.models
 
     private function dispatchHandSorted(sortedCards:Array, animate:Boolean):void {
       dispatchEvent(new CardMessage(CardMessage.HAND_SORTED, { sortedCards:sortedCards, animate:Boolean }));
+    }
+
+    private function dispatchHide():void {
+      dispatchEvent(new CardMessage(CardMessage.HAND_HIDE, {}));
     }
 
     //

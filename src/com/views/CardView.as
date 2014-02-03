@@ -6,9 +6,11 @@ package com.views
   import com.models.Card;
 
   import flash.display.Bitmap;
+  import flash.filters.GlowFilter;
 
   import starling.display.Image;
   import starling.events.Touch;
+  import starling.filters.FragmentFilter;
   import starling.textures.Texture;
   import starling.textures.TextureAtlas;
 
@@ -74,6 +76,9 @@ package com.views
         dispatchCardClicked();
     }
 
+    protected override function handleHover(touch:Touch):void {
+    }
+
     //
     // Private methods.
     //
@@ -117,6 +122,9 @@ package com.views
       }
 
       _image = addChild(imageFor(_card.imageFile)) as Image;
+      _image.pivotX = _image.width / 2;
+      _image.pivotY = _image.height;
+
       scaleImage();
     }
 
@@ -137,19 +145,21 @@ package com.views
     }
 
     private function scaleImage():void {
-//      var width:Number = _image.width;
-//      var height:Number = _image.height;
-//
-//      var scale:Number = 1;
-//
-//      if(height < width) {
-//        scale = CardManager.instance.cardWidth / width;
-//      } else {
-//        scale = CardManager.instance.cardHeight / height;
-//      }
-//
-//      _image.scaleX = scale;
-//      _image.scaleY = scale;
+      return;  // not sure if we want this at the moment
+
+      var width:Number = _image.width;
+      var height:Number = _image.height;
+
+      var scale:Number = 1;
+
+      if(height < width) {
+        scale = CardManager.instance.cardWidth / width;
+      } else {
+        scale = CardManager.instance.cardHeight / height;
+      }
+
+      _image.scaleX = scale;
+      _image.scaleY = scale;
     }
 
     //

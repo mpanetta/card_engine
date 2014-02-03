@@ -10,6 +10,7 @@ package com.views
   import starling.animation.Transitions;
   import starling.animation.Tween;
   import starling.core.Starling;
+  import starling.utils.deg2rad;
 
   public class HandView extends ViewBase
   {
@@ -27,14 +28,20 @@ package com.views
     private var _fanWidth:int;
     private var _disposed:Boolean = false;
     private var _cards:Hash = new Hash();
+    private var _sorting:Boolean = false;
+    private var _sortedCount:int = 0;
+
+    private var _options:Object;
 
     //
     // Constructors.
     //
 
-    public function HandView(hand:Hand, fanWidth:int) {
+    public function HandView(hand:Hand, fanWidth:int, opts:Object) {
       _hand = hand;
       _fanWidth = fanWidth;
+      _options = opts;
+
       _count++;
 
       setCards();
@@ -65,6 +72,10 @@ package com.views
     public function get seat():int { return _hand.seat; }
 
     private function get fanIncrement():Number { return (_fanWidth / _hand.cards.length); }
+    private function get numCards():int { return _hand.cards.length; }
+
+    private function get even():Boolean { return _hand.cards.length / 2.0 == Math.floor(_hand.cards.length / 2.0); }
+    private function get odd():Boolean { return !even; }
 
     //
     // Public methods.
@@ -78,6 +89,30 @@ package com.views
       dispatcher.dispatchEvent(new CardMessage(CardMessage.CARD_CLICKED, { cardId:cardId, handId:id }));
     }
 
+    protected function addCard(card:Card):CardView {
+      if(!card) return null;
+
+      var cardView:CardView = addChild(new CardView(card)) as CardView;
+      addCardListeners(cardView);
+
+      _cards[cardView.id] = cardView;
+
+      fan();
+
+      return cardView;
+    }
+
+    protected function removeCard(id:Number):CardView {
+      var card:CardView = removeChild(_cards[id]) as CardView;
+      removeCardListeners(card);
+
+      delete _cards[id];
+
+      fan();
+
+      return card;
+    }
+
     //
     // Private methods.
     //
@@ -86,12 +121,14 @@ package com.views
       _hand.addEventListener(CardMessage.CARD_ADDED, hand_cardAdded);
       _hand.addEventListener(CardMessage.CARD_REMOVED, hand_cardRemoved);
       _hand.addEventListener(CardMessage.HAND_SORTED, hand_handSorted);
+      _hand.addEventListener(CardMessage.HAND_HIDE, hand_handHide);
     }
 
     private function unregister():void {
       _hand.removeEventListener(CardMessage.CARD_ADDED, hand_cardAdded);
       _hand.removeEventListener(CardMessage.CARD_REMOVED, hand_cardRemoved);
       _hand.removeEventListener(CardMessage.HAND_SORTED, hand_handSorted);
+      _hand.removeEventListener(CardMessage.HAND_HIDE, hand_handHide);
     }
 
     private function setCards():void {
@@ -99,35 +136,31 @@ package com.views
         addCard(card);
     }
 
-    private function addCard(card:Card):void {
-      if(!card) return;
-
-      var cardView:CardView = addChild(new CardView(card)) as CardView;
-      addCardListeners(cardView);
-
-      _cards[cardView.id] = cardView;
-      fan();
-    }
-
-    private function removeCard(id:Number):void {
-      var card:CardView = removeChild(_cards[id]) as CardView;
-      removeCardListeners(card);
-
-      delete _cards[id];
-
-      fan();
-    }
-
     private function fan():void {
+      if(_options.noFan) return;
+
       var i:int = 0;
       var card:CardView;
+      var rotOrder:int = 0;
 
       for each(var id:Number in _hand.order) {
         card = _cards[id];
-        addChild(card);
-        card.x = i * fanIncrement;
+
+        fanCard(card, i);
         i++;
       }
+    }
+
+    private function rotationFor(index:int):Number {
+      return deg2rad(((60 / numCards) * index) - 30);
+    }
+
+    private function fanCard(card:CardView, index:int):void {
+      addChild(card);
+      card.x = index * fanIncrement;
+
+      if(_options.rotation)
+        card.rotation = rotationFor(index);
     }
 
     private function addCardListeners(card:CardView):void {
@@ -146,19 +179,29 @@ package com.views
     }
 
     private function sort(sortedCards:Array, animate:Boolean):void {
+      if(_sorting == true) return;
+      if(animate) _sorting = true;
+
+      _sortedCount = sortedCards.length;
+
+      var index:int;
+
       for each(var view:CardView in _cards.values) {
         if(animate) {
+          index = sortIndex(sortedCards, view.id);
           var tween:Tween = new Tween(view, 0.3, Transitions.LINEAR);
-          tween.animate("x", sortIndex(sortedCards, view.id) * fanIncrement);
+          tween.animate("x", index * fanIncrement);
+
+          if(_options.rotate)
+            tween.animate("rotation", rotationFor(index));
+          tween.onComplete = sortTweenComplete;
+
+          addChild(view);
+
           Starling.juggler.add(tween);
         } else {
-          view.x = sortIndex(sortedCards, view.id) * fanIncrement;
+          fanCard(view, sortIndex(sortedCards, view.id));
         }
-      }
-
-      for each(var card:Card in sortedCards) {
-        view = _cards[card.id];
-        addChild(view);
       }
     }
 
@@ -169,6 +212,20 @@ package com.views
       }
 
       throw new CardError(CardError.NO_ID, "Couldn't fund id: " + id);
+    }
+
+    private function sortTweenComplete():void {
+      _sortedCount -= 1;
+      if(_sortedCount == 0) {
+        _sorting = false;
+        return;
+      }
+
+      fan();
+    }
+
+    private function hide():void {
+      visible = !_hand.hidden;
     }
 
     //
@@ -189,6 +246,10 @@ package com.views
 
     private function hand_handSorted(message:CardMessage):void {
       sort(message.sortedCards, message.animate);
+    }
+
+    private function hand_handHide(message:CardMessage):void {
+      hide();
     }
   }
 }
