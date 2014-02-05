@@ -71,7 +71,7 @@ package com.models
 
     public function hideHand(seat:Number, value:Boolean):void {
       var hand:Hand = _hands[seat];
-      hand.hide(value);
+      if(hand) hand.hide(value);
     }
 
     //
