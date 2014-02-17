@@ -104,6 +104,11 @@ package com.models
       dispatchHide();
     }
 
+    public function changeEnabled(cardId:Number, enabled:Boolean):void {
+      var card:Card = _cards[cardId];
+      card.enabled = enabled;
+    }
+
     //
     // Private methods.
     //

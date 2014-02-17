@@ -21,6 +21,7 @@ package com.models
     private var _suit:String;
     private var _raised:Boolean = false;
     private var _value:int;
+    private var _enabled:Boolean = true;
 
     //
     // Constructors.
@@ -44,12 +45,34 @@ package com.models
     // Getters and setters.
     //
 
-    public function get imageFile():String { return _faceUp ? "card_" + _name : "b1fv"; }
+    public function get imageFile():String { return "247_" + (_faceUp ? fullSuit + "_" + face.toUpperCase() : "CardBack_III_Blank"); }
     public function get id():Number { return _id; }
     public function get face():String { return _face; }
     public function get suit():String { return _suit; }
     public function get value():int { return _value; }
     public function get faceUp():Boolean { return _faceUp; }
+
+    public function set enabled(val:Boolean):void { _enabled = val; dispatchEnabledChanged(); }
+    public function get enabled():Boolean { return _enabled; }
+
+    private function get fullSuit():String {
+      switch(_suit) {
+        case "c":
+          return "Clubs";
+          break;
+        case "d":
+          return "Diamonds";
+          break;
+        case "h":
+          return "Hearts";
+          break;
+        case "s":
+          return "Spades";
+          break;
+        default:
+          throw new CardError(CardError.UNKOWN_STANDARD_SUIT, _suit);
+      }
+    }
 
     //
     // Public methods.
@@ -79,6 +102,10 @@ package com.models
 
       _raised = false;
       dispatchEvent(new CardMessage(CardMessage.CARD_LOWERED, {}));
+    }
+
+    private function dispatchEnabledChanged():void {
+      dispatchEvent(new CardMessage(CardMessage.ENABLED_CHANGED, { enabled:_enabled }));
     }
 
     //

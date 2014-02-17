@@ -37,10 +37,10 @@ package com.models
     // Public methods.
     //
 
-    public function deal(id:Number, cardName:String, seat:int, faceUp:Boolean, cardId:Number):void {
+    public function deal(id:Number, suit:String, face:String, seat:int, faceUp:Boolean, cardId:Number):void {
       var hand:Hand = getHand(id, seat);
 
-      hand.addCard(new Card(cardName, faceUp, cardId));
+      hand.addCard(new Card(face + suit, faceUp, cardId, face, suit));
     }
 
     public function sort(handId:Number, seat:int, sortedCards:Array, animate:Boolean):void {
@@ -72,6 +72,11 @@ package com.models
     public function hideHand(seat:Number, value:Boolean):void {
       var hand:Hand = _hands[seat];
       if(hand) hand.hide(value);
+    }
+
+    public function changeEnabled(handId:Number, cardId:Number, enabled:Boolean):void {
+      var hand:Hand = _hands[handId];
+      hand.changeEnabled(cardId, enabled);
     }
 
     //

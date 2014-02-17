@@ -81,6 +81,15 @@ package com.views
       dispatcher.dispatchEvent(new CardMessage(CardMessage.CARD_CLICKED, { cardId:cardId, handId:handId }));
     }
 
+    protected function handleCardViewAdded(handId:Number):void {
+
+    }
+
+    protected function bringHandToFront(id:Number):void {
+      var view:HandView = _hands[id];
+      _playLayer.addChild(view);
+    }
+
     //
     // Private methods.
     //
@@ -131,10 +140,12 @@ package com.views
 
     private function addHandListeners(hand:HandView):void {
       hand.addListener(CardMessage.CARD_CLICKED, hand_cardClicked);
+      hand.addListener(CardMessage.CARD_VIEW_ADDED, hand_cardViewAdded);
     }
 
     private function removeHandListeners(hand:HandView):void {
       hand.removeListener(CardMessage.CARD_CLICKED, hand_cardClicked);
+      hand.removeListener(CardMessage.CARD_VIEW_ADDED, hand_cardViewAdded);
     }
 
     private function cleanupHands():void {
@@ -198,6 +209,10 @@ package com.views
 
     private function hand_cardClicked(message:CardMessage):void {
       handleCardSelected(message.cardId, message.handId);
+    }
+
+    private function hand_cardViewAdded(message:CardMessage):void {
+      handleCardViewAdded(message.handId);
     }
 
     private function table_handCreated(event:CardMessage):void {

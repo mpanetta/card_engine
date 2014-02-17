@@ -6,13 +6,13 @@ package com.views
   import com.models.Card;
 
   import flash.display.Bitmap;
-  import flash.filters.GlowFilter;
 
   import starling.display.Image;
   import starling.events.Touch;
-  import starling.filters.FragmentFilter;
+  import starling.filters.ColorMatrixFilter;
   import starling.textures.Texture;
   import starling.textures.TextureAtlas;
+  import starling.textures.TextureSmoothing;
 
   public class CardView extends ViewBase
   {
@@ -87,12 +87,14 @@ package com.views
       _card.addEventListener(CardMessage.CARD_FLIPPED, card_cardFlipped);
       _card.addEventListener(CardMessage.CARD_RAISED, card_cardRaised);
       _card.addEventListener(CardMessage.CARD_LOWERED, card_cardLowered);
+      _card.addEventListener(CardMessage.ENABLED_CHANGED, card_enabledChanged);
     }
 
     private function unregister():void {
       _card.removeEventListener(CardMessage.CARD_FLIPPED, card_cardFlipped);
       _card.removeEventListener(CardMessage.CARD_RAISED, card_cardRaised);
       _card.removeEventListener(CardMessage.CARD_LOWERED, card_cardLowered);
+      _card.removeEventListener(CardMessage.ENABLED_CHANGED, card_enabledChanged);
     }
 
     private function createAtlas():void {
@@ -124,6 +126,7 @@ package com.views
       _image = addChild(imageFor(_card.imageFile)) as Image;
       _image.pivotX = _image.width / 2;
       _image.pivotY = _image.height;
+      _image.smoothing = TextureSmoothing.TRILINEAR;
 
       scaleImage();
     }
@@ -162,6 +165,25 @@ package com.views
       _image.scaleY = scale;
     }
 
+    private function handleEnabled(enabled:Boolean):void {
+      if(_image.filter) _image.filter.dispose();
+
+      if(enabled) {
+        _image.filter = null;
+      } else {
+        _image.filter = createGrayFilter();
+      }
+    }
+
+    private function createGrayFilter():ColorMatrixFilter {
+      var filter:ColorMatrixFilter = new ColorMatrixFilter();
+      filter.adjustSaturation(-1);
+      filter.adjustBrightness(-0.25);
+      filter.adjustHue(-0.5);
+
+      return filter;
+    }
+
     //
     // Event handlers.
     //
@@ -176,6 +198,10 @@ package com.views
 
     private function card_cardLowered(message:CardMessage):void {
       lower();
+    }
+
+    private function card_enabledChanged(message:CardMessage):void {
+      handleEnabled(message.enabled);
     }
   }
 }

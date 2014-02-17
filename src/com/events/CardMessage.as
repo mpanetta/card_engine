@@ -21,6 +21,8 @@ package com.events
     public static const CARD_LOWERED:String = "CARD_MESSAGE_CARD_LOWERED";
     public static const HAND_SORTED:String = "CARD_MESSAGE_HAND_SORTED";
     public static const HAND_HIDE:String = "CARD_MESSAGE_HAND_HIDE";
+    public static const ENABLED_CHANGED:String = "CARD_MESSAGE_ENABLED_CHANGED";
+    public static const CARD_VIEW_ADDED:String = "CARD_MESSAGE_CARD_VIEW_ADDED";
 
     //
     // Instance variables.
@@ -45,6 +47,7 @@ package com.events
     public function get handId():Number { return data.handId; }
     public function get sortedCards():Array { return data.sortedCards; }
     public function get animate():Boolean { return data.animate; }
+    public function get enabled():Boolean { return data.enabled; }
 
     //
     // Public methods.

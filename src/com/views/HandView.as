@@ -7,6 +7,8 @@ package com.views
   import com.models.CardError;
   import com.models.Hand;
 
+  import flash.events.EventDispatcher;
+
   import starling.animation.Transitions;
   import starling.animation.Tween;
   import starling.core.Starling;
@@ -71,11 +73,15 @@ package com.views
     public function get id():Number { return _hand.id; }
     public function get seat():int { return _hand.seat; }
 
-    private function get fanIncrement():Number { return (_fanWidth / _hand.cards.length); }
+    private function get fanIncrement():Number { return hasMax ? (_fanWidth / maxCards) : (_fanWidth / numCards); }
     private function get numCards():int { return _hand.cards.length; }
 
-    private function get even():Boolean { return _hand.cards.length / 2.0 == Math.floor(_hand.cards.length / 2.0); }
+    private function get even():Boolean { return numCards / 2.0 == Math.floor(numCards / 2.0); }
     private function get odd():Boolean { return !even; }
+
+    private function get handPos():int { return maxCards == -1 ? 0 : (_fanWidth / maxCards * (maxCards - numCards)) / 2; }
+    private function get maxCards():int { return _options.maxCards ? _options.maxCards : -1; }
+    private function get hasMax():Boolean { return maxCards != -1; }
 
     //
     // Public methods.
@@ -98,6 +104,8 @@ package com.views
       _cards[cardView.id] = cardView;
 
       fan();
+
+      dispatcher.dispatchEvent(new CardMessage(CardMessage.CARD_VIEW_ADDED, { handId:id }));
 
       return cardView;
     }
@@ -141,7 +149,6 @@ package com.views
 
       var i:int = 0;
       var card:CardView;
-      var rotOrder:int = 0;
 
       for each(var id:Number in _hand.order) {
         card = _cards[id];
@@ -152,12 +159,13 @@ package com.views
     }
 
     private function rotationFor(index:int):Number {
+      if(numCards == 1) return 0;
       return deg2rad(((60 / numCards) * index) - 30);
     }
 
     private function fanCard(card:CardView, index:int):void {
       addChild(card);
-      card.x = index * fanIncrement;
+      card.x = (index * fanIncrement) + handPos;
 
       if(_options.rotation)
         card.rotation = rotationFor(index);
