@@ -177,9 +177,7 @@ package com.views
 
     private function createGrayFilter():ColorMatrixFilter {
       var filter:ColorMatrixFilter = new ColorMatrixFilter();
-      filter.adjustSaturation(-1);
-      filter.adjustBrightness(-0.25);
-      filter.adjustHue(-0.5);
+      filter.adjustBrightness(-0.40);
 
       return filter;
     }

@@ -51,6 +51,7 @@ package com.models
     public function get suit():String { return _suit; }
     public function get value():int { return _value; }
     public function get faceUp():Boolean { return _faceUp; }
+    public function get name():String { return _name; }
 
     public function set enabled(val:Boolean):void { _enabled = val; dispatchEnabledChanged(); }
     public function get enabled():Boolean { return _enabled; }

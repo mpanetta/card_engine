@@ -4,6 +4,7 @@ package com.events
   import com.models.Card;
   import com.models.Hand;
   import com.models.Table;
+  import com.views.CardView;
 
   public class CardMessage extends MessageBase
   {
@@ -23,6 +24,7 @@ package com.events
     public static const HAND_HIDE:String = "CARD_MESSAGE_HAND_HIDE";
     public static const ENABLED_CHANGED:String = "CARD_MESSAGE_ENABLED_CHANGED";
     public static const CARD_VIEW_ADDED:String = "CARD_MESSAGE_CARD_VIEW_ADDED";
+    public static const CARD_MOVING:String = "CARD_MESSAGE_CARD_MOVING";
 
     //
     // Instance variables.
@@ -48,6 +50,8 @@ package com.events
     public function get sortedCards():Array { return data.sortedCards; }
     public function get animate():Boolean { return data.animate; }
     public function get enabled():Boolean { return data.enabled; }
+    public function get cardView():CardView { return data.cardView; }
+    public function get options():Object { return data.options; }
 
     //
     // Public methods.

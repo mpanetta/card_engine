@@ -65,6 +65,11 @@ package com.models
       dispatchCardAdded(card);
     }
 
+    public function addExistingCard(card:Card):void {
+      _cards[card.id] = card;
+      _order.push(card.id);
+    }
+
     public function removeCard(cardId:Number):void {
       if(!_cards[cardId])
         throw new CardError(CardError.NO_ID, cardId.toString());
@@ -109,6 +114,17 @@ package com.models
       card.enabled = enabled;
     }
 
+    public function move(cardId:Number, toHand:Number, options:Object):Card {
+      var card:Card = _cards[cardId];
+
+      delete _cards[cardId];
+      _order.splice(order.indexOf(cardId), 1);
+
+      dispatchCardMoving(cardId, toHand, options);
+
+      return card;
+    }
+
     //
     // Private methods.
     //
@@ -137,6 +153,10 @@ package com.models
 
     private function dispatchHide():void {
       dispatchEvent(new CardMessage(CardMessage.HAND_HIDE, {}));
+    }
+
+    private function dispatchCardMoving(cardId:Number, toHand:Number, options:Object):void {
+      dispatchEvent(new CardMessage(CardMessage.CARD_MOVING, { cardId:cardId, handId:toHand, options:options }));
     }
 
     //

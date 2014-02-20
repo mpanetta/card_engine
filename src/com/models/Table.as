@@ -79,6 +79,17 @@ package com.models
       hand.changeEnabled(cardId, enabled);
     }
 
+    public function moveCard(cardId:Number, fromHandId:Number, toHandId:Number, options:Object):void {
+      var from:Hand = _hands[fromHandId];
+      var toHand:Hand = _hands[toHandId];
+      if(!toHand) {
+        toHand = createHand(toHandId, toHandId);
+      }
+
+      var card:Card = from.move(cardId, toHandId, options);
+      toHand.addExistingCard(card);
+    }
+
     //
     // Private methods.
     //
