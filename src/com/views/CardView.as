@@ -4,6 +4,8 @@ package com.views
   import com.events.CardMessage;
   import com.managers.CardManager;
   import com.models.Card;
+  import com.sound.SoundManager;
+  import com.util.randomNumber;
 
   import flash.display.Bitmap;
 
@@ -72,8 +74,10 @@ package com.views
     //
 
     protected override function handleEnded(touch:Touch):void {
-      if(touch)
+      if(touch) {
+        if(_card.enabled) SoundManager.instance.playTrack("cards", "buttonClick");
         dispatchCardClicked();
+      }
     }
 
     protected override function handleHover(touch:Touch):void {
@@ -188,6 +192,7 @@ package com.views
 
     private function card_cardFlipped(message:CardMessage):void {
       update();
+      SoundManager.instance.playTrack("cards", "cardFlip" + randomNumber(1, 3));
     }
 
     private function card_cardRaised(message:CardMessage):void {

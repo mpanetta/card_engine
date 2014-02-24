@@ -58,7 +58,7 @@ package com.views
     protected function get hands():Array { return _hands.values; }
     protected function get seatIndexOffset():int { return 1; }
     protected function get positions():Array { throw new CardError(CardError.MUST_OVERRIDE, " method: positions"); }
-    protected function get backgroundClass():Class { throw new CardError(CardError.MUST_OVERRIDE, " method: backgroundClass"); }
+    protected function get backgroundBitmap():Bitmap { throw new CardError(CardError.MUST_OVERRIDE, " method: backgroundClass"); }
     protected function get appWidth():Number { return Engine.instance.appWidth; }
     protected function get appHeight():Number { return Engine.instance.appHeight; }
     protected function get playLayer():Sprite { return _playLayer; }
@@ -123,9 +123,9 @@ package com.views
     }
 
     private function setBackground():void {
-      if(_backgroundImage || !backgroundClass) return;
+      if(_backgroundImage || !backgroundBitmap) return;
 
-      _backgroundImage = new Image(Texture.fromBitmap(new backgroundClass() as Bitmap));
+      _backgroundImage = new Image(Texture.fromBitmap(backgroundBitmap));
       _backgroundImage.pivotX = _backgroundImage.width / 2;
       _backgroundImage.pivotY = _backgroundImage.height / 2;
 

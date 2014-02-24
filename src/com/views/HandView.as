@@ -6,6 +6,8 @@ package com.views
   import com.models.Card;
   import com.models.CardError;
   import com.models.Hand;
+  import com.sound.SoundManager;
+  import com.util.randomNumber;
 
   import flash.geom.Point;
 
@@ -101,8 +103,11 @@ package com.views
       tween.animate('x', trans.x);
       tween.animate('y', trans.y);
       tween.animate('rotation', trans.rotation);
-      tween.onComplete = fan;
+      tween.onComplete = function():void { moveComplete(opts.noSound) };
       Starling.juggler.add(tween);
+
+      if(!opts.noSound)
+        SoundManager.instance.playTrack("cards", "cardSlide" + randomNumber(1, 6));
 
       dispatcher.dispatchEvent(new CardMessage(CardMessage.CARD_VIEW_ADDED, { handId:id }));
     }
@@ -276,6 +281,13 @@ package com.views
 
     private function hide():void {
       visible = !_hand.hidden;
+    }
+
+    private function moveComplete(noSound:Boolean):void {
+      if(!noSound)
+        SoundManager.instance.playTrack("cards", "cardSlap" + randomNumber(1, 6));
+
+      fan();
     }
 
     //
