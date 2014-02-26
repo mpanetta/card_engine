@@ -91,11 +91,12 @@ package com.views
 
     public function moveCard(view:CardView, opts:Object):void {
       var trans:Object = nextCardPosition();
-      var currentPosition:Point = this.globalToLocal(view.localToGlobal(new Point(view.x, view.y)));
+      var currentPosition:Point = view.parent.localToGlobal(new Point(view.x, view.y));
+      var newPosition:Point = globalToLocal(currentPosition);
+      view.x = newPosition.x;
+      view.y = newPosition.y;
 
       addChild(view);
-      view.x = currentPosition.x;
-      view.y = currentPosition.y;
       addCardListeners(view);
       _cards[view.id] = view;
 
@@ -103,9 +104,8 @@ package com.views
       tween.animate('x', trans.x);
       tween.animate('y', trans.y);
       tween.animate('rotation', trans.rotation);
-      tween.onComplete = function():void { moveComplete(opts.noSound) };
+      tween.onComplete = function():void { moveComplete(opts.noSound, view) };
       Starling.juggler.add(tween);
-
       if(!opts.noSound)
         SoundManager.instance.playTrack("cards", "cardSlide" + randomNumber(1, 6));
 
@@ -150,6 +150,7 @@ package com.views
       var cardView:CardView = _cards[cardId];
       delete _cards[cardId];
       removeCardListeners(cardView);
+      cardView.moving = true;
 
       dispatcher.dispatchEvent(new CardMessage(CardMessage.CARD_MOVING, { cardView:cardView, handId:handId, options:options }));
       fan();
@@ -160,7 +161,7 @@ package com.views
     protected function nextCardPosition():Object {
       var data:Object = {};
       data.rotation = rotationFor(numCards + 1);
-      data.x = _fanWidth ? ((numCards + 1) * fanIncrement) : 0;
+      data.x = (_fanWidth ? ((numCards + 1) * fanIncrement) : 0);
       data.y = 0;
 
       return data;
@@ -249,6 +250,7 @@ package com.views
 
           if(_options.rotate)
             tween.animate("rotation", rotationFor(index));
+
           tween.onComplete = sortTweenComplete;
 
           addChild(view);
@@ -283,10 +285,11 @@ package com.views
       visible = !_hand.hidden;
     }
 
-    private function moveComplete(noSound:Boolean):void {
+    private function moveComplete(noSound:Boolean, view:CardView):void {
       if(!noSound)
         SoundManager.instance.playTrack("cards", "cardSlap" + randomNumber(1, 6));
 
+      view.moving = false;
       fan();
     }
 

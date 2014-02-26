@@ -36,6 +36,7 @@ package com.views
 
     private var _card:Card;
     private var _image:Image;
+    private var _moving:Boolean = false;
 
     //
     // Constructors.
@@ -65,6 +66,9 @@ package com.views
 
     public function get id():Number { return _card.id; }
 
+    public function set moving(value:Boolean):void { _moving = value; }
+    public function get moving():Boolean { return _moving; }
+
     //
     // Public methods.
     //
@@ -74,7 +78,7 @@ package com.views
     //
 
     protected override function handleEnded(touch:Touch):void {
-      if(touch) {
+      if(touch && !moving) {
         if(_card.enabled) SoundManager.instance.playTrack("cards", "buttonClick");
         dispatchCardClicked();
       }
@@ -128,8 +132,8 @@ package com.views
       }
 
       _image = addChild(imageFor(_card.imageFile)) as Image;
-      _image.pivotX = _image.width / 2;
-      _image.pivotY = _image.height;
+      pivotX = _image.width / 2;
+      pivotY = _image.height;
       _image.smoothing = TextureSmoothing.TRILINEAR;
 
       scaleImage();
