@@ -100,7 +100,7 @@ package com.views
       addCardListeners(view);
       _cards[view.id] = view;
 
-      var tween:Tween = new Tween(view, 0.25);
+      var tween:Tween = new Tween(view, 0.35);
       tween.animate('x', trans.x);
       tween.animate('y', trans.y);
       tween.animate('rotation', trans.rotation);
@@ -207,16 +207,27 @@ package com.views
     }
 
     private function rotationFor(index:int):Number {
-      if(numCards <= 1 ) return 0;
-      return deg2rad(((60 / numCards) * index) - 30);
+      if(numCards <= 1) return 0;
+      var center:Number = (numCards / 2) - 0.5;
+      return deg2rad((index - center) * 5)
     }
 
     private function fanCard(card:CardView, index:int):void {
       addChild(card);
       card.x = (index * fanIncrement) + handPos;
+      card.y = archAdjustment(index);
 
       if(_options.rotation)
         card.rotation = rotationFor(index);
+    }
+
+    private function archAdjustment(index:int):int {
+      return 0;
+      var center:Number = (numCards / 2) - 0.5;
+      if(index == center)
+        return -8;
+
+      return Math.abs(index - center) * 3;
     }
 
     private function addCardListeners(card:CardView):void {

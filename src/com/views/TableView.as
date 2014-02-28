@@ -9,6 +9,7 @@ package com.views
   import com.models.Table;
 
   import flash.display.Bitmap;
+  import flash.geom.Point;
   import flash.utils.getDefinitionByName;
 
   import starling.display.Image;
@@ -165,33 +166,33 @@ package com.views
     private function scaleBackground(newWidth:Number, newHeight:Number):void {
       if(!_backgroundImage) return;
 
-      var scale:Number = newHeight / (_backgroundImage.height / _backgroundImage.scaleX);
+      _backgroundImage.scaleX = _backgroundImage.scaleY = 1;
+      var xD:Number = newWidth - _backgroundImage.width;
+      var yD:Number = newHeight - _backgroundImage.height;
 
-      _backgroundImage.scaleX = scale;
-      _backgroundImage.scaleY = scale;
+      if(xD > 0 || yD > 0) {
+        var scale:Number = xD > yD ? newWidth / _backgroundImage.width : newHeight / _backgroundImage.height;
+        _backgroundImage.scaleX = _backgroundImage.scaleY = scale;
+      }
+
       _backgroundImage.x = newWidth / 2;
       _backgroundImage.y = newHeight / 2;
     }
 
     private function scalePlayLayer(newWidth:Number, newHeight:Number):void {
-      var scale:Number = 1;
-      var scaledX:Number = newWidth / appWidth;
-      var scaledY:Number = newHeight / appHeight;
+      var scaleX:Number = newWidth / appWidth;
+      var scaleY:Number = newHeight / appHeight;
+      var scale:Number = Math.min(scaleX, scaleY);
 
-      if(newHeight > newWidth) {
-        scale = scaledX;
+      _playLayer.scaleX = _playLayer.scaleY = scale;
 
-        _playLayer.x = 0;
-        _playLayer.y = ((appHeight * scaledX) - (appHeight * scaledY)) / 2
-      } else {
-        scale = scaledY;
-
-        _playLayer.x =  (scaledX - scaledY) * appWidth / 2
+      if(scale == scaleY) {
+        _playLayer.x = (scaleX - scaleY) * appWidth / 2;
         _playLayer.y = 0;
+      } else {
+        _playLayer.x = 0;
+        _playLayer.y = (scaleY - scaleX) * appHeight / 2;
       }
-
-      _playLayer.scaleX = scale;
-      _playLayer.scaleY = scale;
     }
 
     private function positionHands():void {
