@@ -10,6 +10,7 @@ package com.views
   import com.util.randomNumber;
 
   import flash.geom.Point;
+  import flash.geom.Transform;
 
   import starling.animation.Transitions;
   import starling.animation.Tween;
@@ -100,12 +101,11 @@ package com.views
       addCardListeners(view);
       _cards[view.id] = view;
 
-      var tween:Tween = new Tween(view, 0.35);
-      tween.animate('x', trans.x);
-      tween.animate('y', trans.y);
-      tween.animate('rotation', trans.rotation);
-      tween.onComplete = function():void { moveComplete(opts.noSound, view) };
-      Starling.juggler.add(tween);
+      Starling.juggler.tween(view, 0.15, { transition:Transitions.EASE_IN_OUT, repeatCount:2, reverse:true, scaleX:1.06, scaleY:1.06 });
+      Starling.juggler.tween(view, 0.30, { transition:Transitions.EASE_IN_OUT, x:trans.x, y:trans.y, rotation:trans.rotation,
+        onComplete:function():void { moveComplete(opts.noSound, view)
+      }});
+
       if(!opts.noSound)
         SoundManager.instance.playTrack("cards", "cardSlide" + randomNumber(1, 6));
 
@@ -209,25 +209,28 @@ package com.views
     private function rotationFor(index:int):Number {
       if(numCards <= 1) return 0;
       var center:Number = (numCards / 2) - 0.5;
-      return deg2rad((index - center) * 5)
+
+      return deg2rad((index - center) * (_options.arch ? 0.75 : 5))
     }
 
     private function fanCard(card:CardView, index:int):void {
       addChild(card);
       card.x = (index * fanIncrement) + handPos;
-      card.y = archAdjustment(index);
+      card.y = archAdjustment(index, card);
 
       if(_options.rotation)
         card.rotation = rotationFor(index);
     }
 
-    private function archAdjustment(index:int):int {
-      return 0;
+    private function archAdjustment(index:int, view:CardView):int {
+      if(!_options.arch) return 0;
       var center:Number = (numCards / 2) - 0.5;
       if(index == center)
-        return -8;
-
-      return Math.abs(index - center) * 3;
+        return 0;
+      else if(index < center)
+        return -view.transformationMatrix.deltaTransformPoint(new Point(view.width, 0)).y;
+      else
+        return view.transformationMatrix.deltaTransformPoint(new Point(view.width, 0)).y;
     }
 
     private function addCardListeners(card:CardView):void {
@@ -256,7 +259,7 @@ package com.views
       for each(var view:CardView in _cards.values) {
         if(animate) {
           index = sortIndex(sortedCards, view.id);
-          var tween:Tween = new Tween(view, 0.3, Transitions.LINEAR);
+          var tween:Tween = new Tween(view, 0.2, Transitions.EASE_IN_OUT);
           tween.animate("x", index * fanIncrement);
 
           if(_options.rotate)
