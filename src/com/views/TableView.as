@@ -1,6 +1,7 @@
 package com.views
 {
   import com.core.dataStructures.Hash;
+  import com.core.enum.Anchor;
   import com.core.scene.ViewBase;
   import com.engine.Engine;
   import com.events.CardMessage;
@@ -9,9 +10,9 @@ package com.views
   import com.models.Table;
 
   import flash.display.Bitmap;
-  import flash.geom.Point;
   import flash.utils.getDefinitionByName;
 
+  import starling.display.BlendMode;
   import starling.display.Image;
   import starling.display.Sprite;
   import starling.events.Event;
@@ -141,7 +142,7 @@ package com.views
 
       view.rotation = deg2rad(pos.rotation);
       addHandListeners(view);
-      positionView(view, pos.x, pos.y);
+      positionView(view, pos.x, pos.y, view.anchor);
     }
 
     private function addHandListeners(hand:HandView):void {
@@ -166,17 +167,11 @@ package com.views
     private function scaleBackground(newWidth:Number, newHeight:Number):void {
       if(!_backgroundImage) return;
 
-      _backgroundImage.scaleX = _backgroundImage.scaleY = 1;
-      var xD:Number = newWidth - _backgroundImage.width;
-      var yD:Number = newHeight - _backgroundImage.height;
-
-      if(xD > 0 || yD > 0) {
-        var scale:Number = xD > yD ? newWidth / _backgroundImage.width : newHeight / _backgroundImage.height;
-        _backgroundImage.scaleX = _backgroundImage.scaleY = scale;
-      }
-
+      _backgroundImage.width = newWidth;
+      _backgroundImage.height = newHeight;
       _backgroundImage.x = newWidth / 2;
       _backgroundImage.y = newHeight / 2;
+      _backgroundImage.blendMode = BlendMode.NONE;
     }
 
     private function scalePlayLayer(newWidth:Number, newHeight:Number):void {
@@ -198,13 +193,32 @@ package com.views
     private function positionHands():void {
       for each(var hand:HandView in hands) {
         var position:Object = positions[hand.seat + seatIndexOffset];
-        positionView(hand, position.x, position.y);
+        positionView(hand, position.x, position.y, hand.anchor);
       }
     }
 
-    private function positionView(hand:HandView, xPos:int, yPos:int):void {
+    private function positionView(hand:HandView, xPos:Number, yPos:Number, anchor:String):void {
       hand.x = xPos;
       hand.y = yPos;
+
+      switch(anchor) {
+        case Anchor.LEFT:
+          hand.x -= _playLayer.x / _playLayer.scaleX;
+          break;
+        case Anchor.RIGHT:
+          hand.x += _playLayer.x / _playLayer.scaleX;
+          break;
+        case Anchor.TOP:
+          hand.y -= _playLayer.y / _playLayer.scaleY;
+          break;
+        case Anchor.BOTTOM:
+          hand.y += _playLayer.y / _playLayer.scaleY;
+          break;
+        case Anchor.BOTTOM_LEFT:
+          hand.x -= _playLayer.x / _playLayer.scaleX;
+          hand.y += _playLayer.y / _playLayer.scaleY;
+          break;
+      }
     }
 
     //

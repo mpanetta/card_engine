@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://texturepacker.com-->
+<!-- $TexturePacker:SmartUpdate:feb2cc69daa214f978d9ba317463605d$ -->
+<TextureAtlas imagePath="assets.png">
+    <SubTexture name="247_CardBack_I" x="270" y="1685" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_CardBack_II" x="270" y="1311" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_CardBack_III" x="672" y="1124" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_CardBack_III_Blank" x="538" y="1124" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_CardBack_II_Blank" x="806" y="1124" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_CardBack_I_Blank" x="270" y="1498" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Clubs_10" x="404" y="1124" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Clubs_2" x="270" y="1124" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Clubs_3" x="136" y="1685" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Clubs_4" x="136" y="1498" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Clubs_5" x="136" y="1311" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Clubs_6" x="136" y="1124" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Clubs_7" x="806" y="937" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Clubs_8" x="672" y="937" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Clubs_9" x="538" y="937" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Clubs_A" x="404" y="937" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Clubs_J" x="270" y="937" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Clubs_K" x="136" y="937" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Clubs_Q" x="2" y="1685" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Diamonds_10" x="2" y="1498" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Diamonds_2" x="2" y="1311" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Diamonds_3" x="2" y="1124" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Diamonds_4" x="2" y="937" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Diamonds_5" x="806" y="750" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Diamonds_6" x="672" y="750" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Diamonds_7" x="538" y="750" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Diamonds_8" x="404" y="750" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Diamonds_9" x="270" y="750" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Diamonds_A" x="136" y="750" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Diamonds_J" x="2" y="750" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Diamonds_K" x="806" y="563" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Diamonds_Q" x="672" y="563" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Hearts_10" x="538" y="563" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Hearts_2" x="404" y="563" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Hearts_3" x="270" y="563" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Hearts_4" x="136" y="563" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Hearts_5" x="2" y="563" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Hearts_6" x="806" y="376" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Hearts_7" x="672" y="376" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Hearts_8" x="538" y="376" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Hearts_9" x="404" y="376" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Hearts_A" x="270" y="376" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Hearts_J" x="136" y="376" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Hearts_K" x="2" y="376" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Hearts_Q" x="806" y="189" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Spades_10" x="672" y="189" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Spades_2" x="538" y="189" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Spades_3" x="404" y="189" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Spades_4" x="270" y="189" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Spades_5" x="136" y="189" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Spades_6" x="2" y="189" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Spades_7" x="806" y="2" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Spades_8" x="672" y="2" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Spades_9" x="538" y="2" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Spades_A" x="404" y="2" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Spades_J" x="270" y="2" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Spades_K" x="136" y="2" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+    <SubTexture name="247_Spades_Q" x="2" y="2" width="132" height="185" frameX="-2" frameY="-2" frameWidth="136" frameHeight="189"/>
+</TextureAtlas>

@@ -10,7 +10,6 @@ package com.views
   import com.util.randomNumber;
 
   import flash.geom.Point;
-  import flash.geom.Transform;
 
   import starling.animation.Transitions;
   import starling.animation.Tween;
@@ -35,7 +34,6 @@ package com.views
     private var _cards:Hash = new Hash();
     private var _sorting:Boolean = false;
     private var _sortedCount:int = 0;
-
     private var _options:Object;
 
     //
@@ -46,7 +44,6 @@ package com.views
       _hand = hand;
       _fanWidth = fanWidth;
       _options = opts;
-
       _count++;
 
       setCards();
@@ -73,8 +70,12 @@ package com.views
     // Getters and setters.
     //
 
+    public override function set x(value:Number):void { super.x = Math.floor(value); }
+    public override function set y(value:Number):void { super.y = Math.floor(value); }
+
     public function get id():Number { return _hand.id; }
     public function get seat():int { return _hand.seat; }
+    public function get anchor():String { return _options.anchor; }
 
     private function get fanIncrement():Number { return hasMax ? (_fanWidth / maxCards) : (_fanWidth / numCards); }
     private function get numCards():int { return _hand.cards.length; }
@@ -91,7 +92,7 @@ package com.views
     //
 
     public function moveCard(view:CardView, opts:Object):void {
-      var trans:Object = nextCardPosition();
+      var trans:Object = nextCardPosition(view);
       var currentPosition:Point = view.parent.localToGlobal(new Point(view.x, view.y));
       var newPosition:Point = globalToLocal(currentPosition);
       view.x = newPosition.x;
@@ -101,8 +102,7 @@ package com.views
       addCardListeners(view);
       _cards[view.id] = view;
 
-      Starling.juggler.tween(view, 0.15, { transition:Transitions.EASE_IN_OUT, repeatCount:2, reverse:true, scaleX:1.06, scaleY:1.06 });
-      Starling.juggler.tween(view, 0.30, { transition:Transitions.EASE_IN_OUT, x:trans.x, y:trans.y, rotation:trans.rotation,
+      Starling.juggler.tween(view, 0.50, { transition:Transitions.LINEAR, x:trans.x, y:trans.y, rotation:trans.rotation,
         onComplete:function():void { moveComplete(opts.noSound, view)
       }});
 
@@ -116,13 +116,17 @@ package com.views
     // Protected methods.
     //
 
+    protected override function handleAddedToStage():void {
+      if(_options.scaleFactor)
+        scaleX = scaleY = _options.scaleFactor;
+    }
+
     protected function handleCardClicked(cardId:Number):void {
       dispatcher.dispatchEvent(new CardMessage(CardMessage.CARD_CLICKED, { cardId:cardId, handId:id }));
     }
 
     protected function addCard(card:Card):CardView {
       if(!card) return null;
-
       var cardView:CardView = addChild(new CardView(card)) as CardView;
       addCardListeners(cardView);
 
@@ -158,11 +162,11 @@ package com.views
       return cardView;
     }
 
-    protected function nextCardPosition():Object {
+    protected function nextCardPosition(view:CardView):Object {
       var data:Object = {};
       data.rotation = rotationFor(numCards + 1);
       data.x = (_fanWidth ? ((numCards + 1) * fanIncrement) : 0);
-      data.y = 0;
+      data.y = 0;//_options.arch ? archAdjustment(numCards + 1, view) : 0;
 
       return data;
     }
@@ -210,7 +214,7 @@ package com.views
       if(numCards <= 1) return 0;
       var center:Number = (numCards / 2) - 0.5;
 
-      return deg2rad((index - center) * (_options.arch ? 0.75 : 5))
+      return deg2rad((index - center) * (_options.arch ? 0.75 : 7))
     }
 
     private function fanCard(card:CardView, index:int):void {
@@ -259,7 +263,7 @@ package com.views
       for each(var view:CardView in _cards.values) {
         if(animate) {
           index = sortIndex(sortedCards, view.id);
-          var tween:Tween = new Tween(view, 0.2, Transitions.EASE_IN_OUT);
+          var tween:Tween = new Tween(view, 0.3, Transitions.EASE_IN_OUT);
           tween.animate("x", index * fanIncrement);
 
           if(_options.rotate)
