@@ -52,6 +52,7 @@ package com.events
     public function get enabled():Boolean { return data.enabled; }
     public function get cardView():CardView { return data.cardView; }
     public function get options():Object { return data.options; }
+    public function get moveIndex():int { return data.moveIndex; }
 
     //
     // Public methods.

@@ -75,6 +75,9 @@ package com.views
 
     public function set moving(value:Boolean):void { _moving = value; }
     public function get moving():Boolean { return _moving; }
+
+    public override function get name():String { return _card.name; }
+
     public override function set x(value:Number):void { super.x = Math.floor(value); }
     public override function set y(value:Number):void { super.y = Math.floor(value); }
 
@@ -124,7 +127,7 @@ package com.views
     private function createAtlas(imageKlass:Class, xmlClass:Class):TextureAtlas {
       var bitmap:Bitmap = new imageKlass();
       bitmap.smoothing = true;
-      var texture:Texture = Texture.fromBitmap(bitmap);
+      var texture:Texture = Texture.fromBitmap(bitmap, false);
       var xml:XML = XML(new xmlClass());
 
       return new TextureAtlas(texture, xml)

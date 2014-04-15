@@ -70,7 +70,7 @@ package com.models
       _order.push(card.id);
     }
 
-    public function removeCard(cardId:Number):void {
+    public function removeCard(cardId:Number, moveIndex):void {
       if(!_cards[cardId])
         throw new CardError(CardError.NO_ID, cardId.toString());
 
@@ -78,7 +78,7 @@ package com.models
 
       _order.splice(order.indexOf(cardId), 1);
 
-      dispatchCardRemoved(cardId);
+      dispatchCardRemoved(cardId, moveIndex);
     }
 
     public function flip(cardId:Number, cardName:String):void {
@@ -139,8 +139,8 @@ package com.models
       dispatchEvent(new CardMessage(CardMessage.CARD_ADDED, { hand:this, card:card }));
     }
 
-    private function dispatchCardRemoved(cardId:Number):void {
-      dispatchEvent(new CardMessage(CardMessage.CARD_REMOVED, { handId:id, cardId:cardId }));
+    private function dispatchCardRemoved(cardId:Number, moveIndex):void {
+      dispatchEvent(new CardMessage(CardMessage.CARD_REMOVED, { handId:id, cardId:cardId, moveIndex:moveIndex }));
     }
 
     private function dispatchCreated():void {

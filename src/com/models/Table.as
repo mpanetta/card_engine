@@ -64,9 +64,9 @@ package com.models
       hand.lower(cardId);
     }
 
-    public function removeCard(seat:Number, cardId:Number):void {
+    public function removeCard(seat:Number, cardId:Number, moveIndex=-1):void {
       var hand:Hand = _hands[seat];
-      hand.removeCard(cardId);
+      hand.removeCard(cardId, moveIndex);
     }
 
     public function hideHand(seat:Number, value:Boolean):void {

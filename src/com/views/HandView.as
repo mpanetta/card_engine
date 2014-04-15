@@ -15,6 +15,7 @@ package com.views
   import starling.animation.Tween;
   import starling.core.Starling;
   import starling.utils.deg2rad;
+  import starling.utils.rad2deg;
 
   public class HandView extends ViewBase
   {
@@ -86,6 +87,7 @@ package com.views
     private function get handPos():int { return maxCards == -1 ? 0 : (_fanWidth / maxCards * (maxCards - numCards)) / 2; }
     private function get maxCards():int { return _options.maxCards ? _options.maxCards : -1; }
     private function get hasMax():Boolean { return maxCards != -1; }
+    private function get moveCoords():Array { return _options.moveCoords; }
 
     //
     // Public methods.
@@ -102,7 +104,7 @@ package com.views
       addCardListeners(view);
       _cards[view.id] = view;
 
-      Starling.juggler.tween(view, 0.50, { transition:Transitions.LINEAR, x:trans.x, y:trans.y, rotation:trans.rotation,
+      Starling.juggler.tween(view, 0.40, { transition:Transitions.EASE_IN_OUT, x:trans.x, y:trans.y, rotation:trans.rotation,
         onComplete:function():void { moveComplete(opts.noSound, view)
       }});
 
@@ -139,15 +141,29 @@ package com.views
       return cardView;
     }
 
-    protected function removeCard(id:Number):CardView {
-      var card:CardView = removeChild(_cards[id]) as CardView;
+    protected function removeCard(id:Number, moveIndex:int=-1):CardView {
+      var card:CardView = _cards[id];
       removeCardListeners(card);
 
       delete _cards[id];
 
-      fan();
+      if(moveIndex != -1) {
+        moveForRemove(card, moveIndex);
+      } else {
+        removeChild(card) as CardView;
+        fan();
+      }
 
       return card;
+    }
+
+    private function moveForRemove(view:CardView, index:int):void {
+      var newPosition:Point = globalToLocal(new Point(moveCoords[index].x, moveCoords[index].y));
+      var newRotation:Number = deg2rad(moveCoords[index].rotation - rad2deg(rotation));
+
+      Starling.juggler.tween(view, 0.33, { transition:Transitions.LINEAR, x:newPosition.x, y:newPosition.y, rotation:newRotation, scaleX:0, scaleY:0,
+        onComplete:function():void { removeChild(view); fan();
+      }});
     }
 
     protected function handleMoving(cardId:Number, handId:Number, options:Object):CardView {
@@ -320,7 +336,7 @@ package com.views
     }
 
     private function hand_cardRemoved(message:CardMessage):void {
-      removeCard(message.cardId);
+      removeCard(message.cardId, message.moveIndex);
     }
 
     private function card_cardClicked(message:CardMessage):void {
