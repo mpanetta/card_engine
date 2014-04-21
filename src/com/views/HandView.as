@@ -94,7 +94,7 @@ package com.views
     //
 
     public function moveCard(view:CardView, opts:Object):void {
-      var trans:Object = nextCardPosition(view);
+      var trans:Object = nextCardPosition(view, opts.sort);
       var currentPosition:Point = view.parent.localToGlobal(new Point(view.x, view.y));
       var newPosition:Point = globalToLocal(currentPosition);
       view.x = newPosition.x;
@@ -103,6 +103,8 @@ package com.views
       addChild(view);
       addCardListeners(view);
       _cards[view.id] = view;
+      if(opts.sort)
+        _hand.sort(opts.sort, false);
 
       Starling.juggler.tween(view, 0.40, { transition:Transitions.EASE_IN_OUT, x:trans.x, y:trans.y, rotation:trans.rotation,
         onComplete:function():void { moveComplete(opts.noSound, view)
@@ -178,13 +180,24 @@ package com.views
       return cardView;
     }
 
-    protected function nextCardPosition(view:CardView):Object {
+    protected function nextCardPosition(view:CardView, sort:Array=null):Object {
       var data:Object = {};
-      data.rotation = rotationFor(numCards + 1);
-      data.x = (_fanWidth ? ((numCards + 1) * fanIncrement) : 0);
-      data.y = 0;//_options.arch ? archAdjustment(numCards + 1, view) : 0;
+      var index:int = sort ? indexFor(view, sort) : numCards + 1;
+      data.rotation = rotationFor(index);
+      data.x = (_fanWidth ? ((index) * fanIncrement) : 0);
+      data.y = 0;
 
       return data;
+    }
+
+    private function indexFor(view:CardView, sort:Array):int {
+      var card:Card;
+      for(var i:int = 0; i < sort.length; i++) {
+        card = sort[i];
+        if(view.name == card.name) return i;
+      }
+
+      return -1;
     }
 
     //
@@ -230,7 +243,7 @@ package com.views
       if(numCards <= 1) return 0;
       var center:Number = (numCards / 2) - 0.5;
 
-      return deg2rad((index - center) * (_options.arch ? 0.75 : 7))
+      return deg2rad((index - center) * (_options.arch ? 0.75 : 7));
     }
 
     private function fanCard(card:CardView, index:int):void {
@@ -302,7 +315,7 @@ package com.views
           return i
       }
 
-      throw new CardError(CardError.NO_ID, "Couldn't fund id: " + id);
+      throw new CardError(CardError.NO_ID, "Couldn't find id: " + id);
     }
 
     private function sortTweenComplete():void {

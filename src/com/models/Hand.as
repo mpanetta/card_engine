@@ -60,14 +60,17 @@ package com.models
         throw new CardError(CardError.MULTIPLE_ID, "");
 
       _cards[card.id] = card;
-      _order.push(card.id);
+      if(_order.indexOf(card.id) == -1)
+        _order.push(card.id);
 
       dispatchCardAdded(card);
     }
 
     public function addExistingCard(card:Card):void {
       _cards[card.id] = card;
-      _order.push(card.id);
+
+      if(_order.indexOf(card.id) == -1)
+        _order.push(card.id);
     }
 
     public function removeCard(cardId:Number, moveIndex):void {
