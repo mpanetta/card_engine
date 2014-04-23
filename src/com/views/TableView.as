@@ -128,8 +128,8 @@ package com.views
       if(_backgroundImage || !backgroundBitmap) return;
 
       _backgroundImage = new Image(Texture.fromBitmap(backgroundBitmap));
-      _backgroundImage.pivotX = _backgroundImage.width / 2;
-      _backgroundImage.pivotY = _backgroundImage.height / 2;
+//      _backgroundImage.pivotX = _backgroundImage.width / 2;
+//      _backgroundImage.pivotY = _backgroundImage.height / 2;
 
       _backgroundLayer.addChild(_backgroundImage);
     }
@@ -164,13 +164,16 @@ package com.views
       _hands.clear();
     }
 
-    private function scaleBackground(newWidth:Number, newHeight:Number):void {
+    private function scaleBackground(cw:Number, ch:Number):void {
       if(!_backgroundImage) return;
 
-      _backgroundImage.width = newWidth;
-      _backgroundImage.height = newHeight;
-      _backgroundImage.x = newWidth / 2;
-      _backgroundImage.y = newHeight / 2;
+      var p:Number = ch / cw < _backgroundImage.height / _backgroundImage.width ? cw / _backgroundImage.width : ch / _backgroundImage.height;
+
+      _backgroundImage.width *= p;
+      _backgroundImage.height *= p;
+      _backgroundImage.x = (cw - _backgroundImage.width) / 2;
+      _backgroundImage.y = (ch - _backgroundImage.height) / 2;
+
       _backgroundImage.blendMode = BlendMode.NONE;
     }
 
