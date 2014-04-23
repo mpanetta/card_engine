@@ -80,6 +80,7 @@ package com.models
     //
 
     public override function toString():String {
+      return _name;
       return _faceUp ? _name : "XX";
     }
 
