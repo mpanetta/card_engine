@@ -91,7 +91,6 @@ package com.views
 
     protected override function handleEnded(touch:Touch):void {
       if(touch && !moving) {
-        if(_card.enabled) SoundManager.instance.playTrack("cards", "buttonClick");
         dispatchCardClicked();
       }
     }
