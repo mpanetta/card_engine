@@ -128,6 +128,10 @@ package com.models
       return card;
     }
 
+    public function fan(opts:Object):void {
+      dispatchFan(opts);
+    }
+
     //
     // Private methods.
     //
@@ -160,6 +164,10 @@ package com.models
 
     private function dispatchCardMoving(cardId:Number, toHand:Number, options:Object):void {
       dispatchEvent(new CardMessage(CardMessage.CARD_MOVING, { cardId:cardId, handId:toHand, options:options }));
+    }
+
+    private function dispatchFan(opts:Object):void {
+      dispatchEvent(new CardMessage(CardMessage.HAND_FAN, { options:opts }));
     }
 
     //

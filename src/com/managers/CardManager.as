@@ -8,6 +8,8 @@ package com.managers
 
   import flash.events.EventDispatcher;
 
+  import starling.display.Image;
+
   public class CardManager extends EventDispatcher
   {
     //
@@ -21,6 +23,7 @@ package com.managers
     private static var _instance:CardManager;
 
     private var _options:Object;
+    private var _cardSheets:Array = [];
 
     //
     // Constructors.
@@ -74,6 +77,22 @@ package com.managers
 
     public function rejectBySuit(cards:Array, suit:String):Array {
       return ArrayHelper.reject(cards, function(card:Card):Boolean { return card.suit == suit });
+    }
+
+    public function setCardAssets(sheets:Array):void {
+      _cardSheets = sheets;
+    }
+
+    public function imageForCard(name:String):Image {
+      for(var i:int = 0; i < _cardSheets.length; i++) {
+        try {
+          return new Image(_cardSheets[i].getTexture(name));
+        } catch(error:Error) {
+          // Do nothing
+        }
+      }
+
+      throw new CardError(CardError.MISSING_CARD_IMAGE, " name: " + name);
     }
 
     //

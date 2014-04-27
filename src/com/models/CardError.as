@@ -14,6 +14,8 @@ package com.models
     public static const MULTIPLE_ID:String = "Attempted to use id multiple times.";
     public static const UNKOWN_STANDARD_SUIT:String = "Unkown suit num for standard suit.";
     public static const NO_ID:String = "Could not find object with id provided.";
+    public static const MISSING_CARD_IMAGE:String = "Art for card could not be found.";
+
     //
     // Instance variables.
     //

@@ -74,6 +74,11 @@ package com.models
       if(hand) hand.hide(value);
     }
 
+    public function fanHand(seat:Number, opts:Object):void {
+      var hand:Hand = _hands[seat];
+      hand.fan(opts);
+    }
+
     public function changeEnabled(handId:Number, cardId:Number, enabled:Boolean):void {
       var hand:Hand = _hands[handId];
       hand.changeEnabled(cardId, enabled);

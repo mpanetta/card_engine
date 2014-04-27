@@ -1,8 +1,10 @@
 package com.views
 {
+  import com.core.dataStructures.ArrayHelper;
   import com.core.dataStructures.Hash;
   import com.core.scene.ViewBase;
   import com.events.CardMessage;
+  import com.managers.CardManager;
   import com.models.Card;
   import com.models.CardError;
   import com.models.Hand;
@@ -12,10 +14,8 @@ package com.views
   import flash.geom.Point;
 
   import starling.animation.Transitions;
-  import starling.animation.Tween;
   import starling.core.Starling;
   import starling.utils.deg2rad;
-  import starling.utils.rad2deg;
 
   public class HandView extends ViewBase
   {
@@ -84,17 +84,17 @@ package com.views
     private function get even():Boolean { return numCards / 2.0 == Math.floor(numCards / 2.0); }
     private function get odd():Boolean { return !even; }
 
-    private function get handPos():int { return maxCards == -1 ? 0 : (_fanWidth / maxCards * (maxCards - numCards)) / 2; }
+    private function get handPos():int { return maxCards == -1 ? 0 : (_fanWidth / maxCards * (maxCards - numCards)) / 4; }
     private function get maxCards():int { return _options.maxCards ? _options.maxCards : -1; }
     private function get hasMax():Boolean { return maxCards != -1; }
-    private function get moveCoords():Array { return _options.moveCoords; }
 
     //
     // Public methods.
     //
 
     public function moveCard(view:CardView, opts:Object):void {
-      var trans:Object = nextCardPosition(view, opts.sort);
+      if(opts.sort) _hand.sort(opts.sort, false);
+
       var currentPosition:Point = view.parent.localToGlobal(new Point(view.x, view.y));
       var newPosition:Point = globalToLocal(currentPosition);
       view.x = newPosition.x;
@@ -103,15 +103,8 @@ package com.views
       addChild(view);
       addCardListeners(view);
       _cards[view.id] = view;
-      if(opts.sort)
-        _hand.sort(opts.sort, false);
 
-      Starling.juggler.tween(view, 0.40, { transition:Transitions.EASE_IN_OUT, x:trans.x, y:trans.y, rotation:trans.rotation,
-        onComplete:function():void { moveComplete(opts.noSound, view)
-      }});
-
-      if(!opts.noSound)
-        SoundManager.instance.playTrack("cards", "cardSlide" + randomNumber(1, 6));
+      if(!opts.noSound) SoundManager.instance.playTrack("cards", "cardSlide" + randomNumber(1, 6));
 
       dispatcher.dispatchEvent(new CardMessage(CardMessage.CARD_VIEW_ADDED, { handId:id }));
     }
@@ -121,8 +114,7 @@ package com.views
     //
 
     protected override function handleAddedToStage():void {
-      if(_options.scaleFactor)
-        scaleX = scaleY = _options.scaleFactor;
+      if(_options.scaleFactor) scaleX = scaleY = _options.scaleFactor;
     }
 
     protected function handleCardClicked(cardId:Number):void {
@@ -131,12 +123,11 @@ package com.views
 
     protected function addCard(card:Card):CardView {
       if(!card) return null;
+
       var cardView:CardView = addChild(new CardView(card)) as CardView;
       addCardListeners(cardView);
 
       _cards[cardView.id] = cardView;
-
-      fan();
 
       dispatcher.dispatchEvent(new CardMessage(CardMessage.CARD_VIEW_ADDED, { handId:id }));
 
@@ -149,23 +140,9 @@ package com.views
 
       delete _cards[id];
 
-      if(moveIndex != -1) {
-        moveForRemove(card, moveIndex);
-      } else {
-        removeChild(card) as CardView;
-        fan();
-      }
+      removeChild(card) as CardView;
 
       return card;
-    }
-
-    private function moveForRemove(view:CardView, index:int):void {
-      var newPosition:Point = globalToLocal(new Point(moveCoords[index].x, moveCoords[index].y));
-      var newRotation:Number = deg2rad(moveCoords[index].rotation - rad2deg(rotation));
-
-      Starling.juggler.tween(view, 0.33, { transition:Transitions.LINEAR, x:newPosition.x, y:newPosition.y, rotation:newRotation, scaleX:0, scaleY:0,
-        onComplete:function():void { removeChild(view); fan();
-      }});
     }
 
     protected function handleMoving(cardId:Number, handId:Number, options:Object):CardView {
@@ -175,29 +152,19 @@ package com.views
       cardView.moving = true;
 
       dispatcher.dispatchEvent(new CardMessage(CardMessage.CARD_MOVING, { cardView:cardView, handId:handId, options:options }));
-      fan();
 
       return cardView;
     }
 
-    protected function nextCardPosition(view:CardView, sort:Array=null):Object {
+    protected function nextCardPosition(view:CardView, assumedIndex:int = -1):Object {
       var data:Object = {};
-      var index:int = sort ? indexFor(view, sort) : numCards + 1;
+      var index:int = assumedIndex > -1 ? assumedIndex : numCards + 1;
       data.rotation = rotationFor(index);
-      data.x = (_fanWidth ? ((index) * fanIncrement) : 0);
-      data.y = 0;
+      data.x = (_fanWidth ? index * fanIncrement : 0) + totalOffset();
+      data.y = archFor(index, view);
+      data.order = index;
 
       return data;
-    }
-
-    private function indexFor(view:CardView, sort:Array):int {
-      var card:Card;
-      for(var i:int = 0; i < sort.length; i++) {
-        card = sort[i];
-        if(view.name == card.name) return i;
-      }
-
-      return -1;
     }
 
     //
@@ -210,6 +177,7 @@ package com.views
       _hand.addEventListener(CardMessage.HAND_SORTED, hand_handSorted);
       _hand.addEventListener(CardMessage.HAND_HIDE, hand_handHide);
       _hand.addEventListener(CardMessage.CARD_MOVING, hand_cardMoving);
+      _hand.addEventListener(CardMessage.HAND_FAN, hand_handFan);
     }
 
     private function unregister():void {
@@ -218,6 +186,7 @@ package com.views
       _hand.removeEventListener(CardMessage.HAND_SORTED, hand_handSorted);
       _hand.removeEventListener(CardMessage.HAND_HIDE, hand_handHide);
       _hand.removeEventListener(CardMessage.CARD_MOVING, hand_cardMoving);
+      _hand.removeEventListener(CardMessage.HAND_FAN, hand_handFan);
     }
 
     private function setCards():void {
@@ -226,17 +195,32 @@ package com.views
     }
 
     private function fan():void {
-      if(_options.noFan) return;
-
       var i:int = 0;
       var card:CardView;
 
       for each(var id:Number in _hand.order) {
         card = _cards[id];
 
-        fanCard(card, i);
-        i++;
+        if(card) {
+          fanCard(card, i);
+          i++;
+        }
       }
+    }
+
+    private function fanCard(card:CardView, index:int):void {
+      addChild(card);
+      var trans:Object = nextCardPosition(card, index);
+
+      if(card.moving) {
+        Starling.juggler.removeTweens(card);
+        card.moving = false;
+      }
+
+      card.moving = true;
+      Starling.juggler.tween(card, 0.33, { transition:Transitions.LINEAR,
+        x:trans.x, y:trans.y, rotation:trans.rotation, onComplete:function():void { card.moving = false; }
+      });
     }
 
     private function rotationFor(index:int):Number {
@@ -246,24 +230,33 @@ package com.views
       return deg2rad((index - center) * (_options.arch ? 0.75 : 7));
     }
 
-    private function fanCard(card:CardView, index:int):void {
-      addChild(card);
-      card.x = (index * fanIncrement) + handPos;
-      card.y = archAdjustment(index, card);
+    private function indexFor(view:CardView, sort:Array):int {
+      var card:Card;
+      for(var i:int = 0; i < sort.length; i++) {
+        card = sort[i];
+        if(view.name == card.name) return i;
+      }
 
-      if(_options.rotation)
-        card.rotation = rotationFor(index);
+      return -1;
     }
 
-    private function archAdjustment(index:int, view:CardView):int {
+    private function archFor(index:int, view:CardView):int {
       if(!_options.arch) return 0;
+
+      var oldRot:Number = view.rotation;
       var center:Number = (numCards / 2) - 0.5;
+      var defaultY:Number = -1;
+      view.rotation = rotationFor(index);
+
       if(index == center)
-        return 0;
-      else if(index < center)
-        return -view.transformationMatrix.deltaTransformPoint(new Point(view.width, 0)).y;
+        defaultY = 0;
+      if(index < center)
+        defaultY = -view.transformationMatrix.deltaTransformPoint(new Point(view.width, 0)).y;
       else
-        return view.transformationMatrix.deltaTransformPoint(new Point(view.width, 0)).y;
+        defaultY = view.transformationMatrix.deltaTransformPoint(new Point(view.width, 0)).y;
+
+      view.rotation = oldRot;
+      return defaultY;
     }
 
     private function addCardListeners(card:CardView):void {
@@ -282,31 +275,6 @@ package com.views
     }
 
     private function sort(sortedCards:Array, animate:Boolean):void {
-      if(_sorting == true) return;
-      if(animate) _sorting = true;
-
-      _sortedCount = sortedCards.length;
-
-      var index:int;
-
-      for each(var view:CardView in _cards.values) {
-        if(animate) {
-          index = sortIndex(sortedCards, view.id);
-          var tween:Tween = new Tween(view, 0.3, Transitions.EASE_IN_OUT);
-          tween.animate("x", index * fanIncrement);
-
-          if(_options.rotate)
-            tween.animate("rotation", rotationFor(index));
-
-          tween.onComplete = sortTweenComplete;
-
-          addChild(view);
-
-          Starling.juggler.add(tween);
-        } else {
-          fanCard(view, sortIndex(sortedCards, view.id));
-        }
-      }
     }
 
     private function sortIndex(sorted:Array, id:Number):int {
@@ -318,16 +286,6 @@ package com.views
       throw new CardError(CardError.NO_ID, "Couldn't find id: " + id);
     }
 
-    private function sortTweenComplete():void {
-      _sortedCount -= 1;
-      if(_sortedCount == 0) {
-        _sorting = false;
-        return;
-      }
-
-      fan();
-    }
-
     private function hide():void {
       visible = !_hand.hidden;
     }
@@ -337,7 +295,26 @@ package com.views
         SoundManager.instance.playTrack("cards", "cardSlap" + randomNumber(1, 6));
 
       view.moving = false;
-      fan();
+    }
+
+    private function fanRequest(options:Object):void {
+      fan()
+    }
+
+    private function totalOffset():Number {
+      return 0;
+      if(!_fanWidth) return 0;
+
+      var offsets:Array = [];
+      for(var i:int = 0; i < numCards; i++)
+        offsets.push(aabbWidth(i));
+
+      return (_fanWidth - ArrayHelper.sum(offsets)) / 2;
+    }
+
+    private function aabbWidth(index:int):Number {
+      var rot:Number = rotationFor(index);
+      return CardManager.instance.cardHeight * Math.sin(rot) + CardManager.instance.cardWidth * Math.cos(rot);
     }
 
     //
@@ -366,6 +343,10 @@ package com.views
 
     private function hand_cardMoving(message:CardMessage):void {
       handleMoving(message.cardId, message.handId, message.options);
+    }
+
+    private function hand_handFan(message:CardMessage):void {
+      fanRequest(message.options);
     }
   }
 }

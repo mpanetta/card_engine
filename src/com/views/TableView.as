@@ -128,9 +128,6 @@ package com.views
       if(_backgroundImage || !backgroundBitmap) return;
 
       _backgroundImage = new Image(Texture.fromBitmap(backgroundBitmap));
-//      _backgroundImage.pivotX = _backgroundImage.width / 2;
-//      _backgroundImage.pivotY = _backgroundImage.height / 2;
-
       _backgroundLayer.addChild(_backgroundImage);
     }
 

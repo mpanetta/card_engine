@@ -25,6 +25,7 @@ package com.events
     public static const ENABLED_CHANGED:String = "CARD_MESSAGE_ENABLED_CHANGED";
     public static const CARD_VIEW_ADDED:String = "CARD_MESSAGE_CARD_VIEW_ADDED";
     public static const CARD_MOVING:String = "CARD_MESSAGE_CARD_MOVING";
+    public static const HAND_FAN:String = "CARD_MESSAGE_HAND_FAN";
 
     //
     // Instance variables.

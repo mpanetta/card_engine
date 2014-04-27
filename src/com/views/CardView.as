@@ -7,13 +7,9 @@ package com.views
   import com.sound.SoundManager;
   import com.util.randomNumber;
 
-  import flash.display.Bitmap;
-
   import starling.display.Image;
   import starling.events.Touch;
   import starling.filters.ColorMatrixFilter;
-  import starling.textures.Texture;
-  import starling.textures.TextureAtlas;
   import starling.textures.TextureSmoothing;
 
   public class CardView extends ViewBase
@@ -22,24 +18,11 @@ package com.views
     // Constants.
     //
 
-    [Embed(source="../../../assets/images/face.xml", mimeType="application/octet-stream")]
-    private var FaceXml:Class;
-    [Embed(source="../../../assets/images/face.png")]
-    private var FaceTexture:Class;
-
-    [Embed(source="../../../assets/images/numbers.xml", mimeType="application/octet-stream")]
-    private var NumbersXml:Class;
-    [Embed(source="../../../assets/images/numbers.png")]
-    private var NumbersTexture:Class;
-
     //
     // Instance variables.
     //
 
     private static var _count:int = 0;
-    private static var _faceAtlas:TextureAtlas;
-    private static var _numbersAtlas:TextureAtlas;
-    private static var _dummy:Texture;
 
     private var _card:Card;
     private var _image:Image;
@@ -53,7 +36,6 @@ package com.views
       _card = card;
       _count++;
 
-      createTextures();
       register();
       update();
     }
@@ -61,7 +43,6 @@ package com.views
     public override function dispose():void {
       _count--;
 
-      destroyAtlas();
       unregister();
 
       super.dispose();
@@ -116,32 +97,6 @@ package com.views
       _card.removeEventListener(CardMessage.ENABLED_CHANGED, card_enabledChanged);
     }
 
-    private function createTextures():void {
-      if(_count != 1) return;
-
-      _faceAtlas = createAtlas(FaceTexture, FaceXml);
-      _numbersAtlas = createAtlas(NumbersTexture, NumbersXml);
-    }
-
-    private function createAtlas(imageKlass:Class, xmlClass:Class):TextureAtlas {
-      var bitmap:Bitmap = new imageKlass();
-      bitmap.smoothing = true;
-      var texture:Texture = Texture.fromBitmap(bitmap, false);
-      var xml:XML = XML(new xmlClass());
-
-      return new TextureAtlas(texture, xml)
-    }
-
-    private function destroyAtlas():void {
-      if(_count != 0) return;
-
-      _numbersAtlas.texture.dispose();
-      _numbersAtlas.dispose();
-
-      _faceAtlas.texture.dispose();
-      _faceAtlas.dispose();
-    }
-
     private function update():void {
       if(_image) {
         removeChild(_image);
@@ -157,8 +112,6 @@ package com.views
 
       pivotX = _image.width / 2;
       pivotY = _image.height;
-
-      scaleImage();
     }
 
     private function raise():void {
@@ -170,32 +123,11 @@ package com.views
     }
 
     private function imageFor(name:String):Image {
-      try {
-        return new Image(_faceAtlas.getTexture(name));
-      } catch(error:Error) {
-        return new Image(_numbersAtlas.getTexture(name));
-      }
+      return CardManager.instance.imageForCard(name);
     }
 
     private function dispatchCardClicked():void {
       dispatcher.dispatchEvent(new CardMessage(CardMessage.CARD_CLICKED, { cardId:id }));
-    }
-
-    private function scaleImage():void {
-      return;
-
-      var width:Number = _image.width;
-      var height:Number = _image.height;
-
-      var scale:Number = 1;
-
-      if(height < width) {
-        scale = (CardManager.instance.cardWidth) / width;
-      } else {
-        scale = (CardManager.instance.cardHeight) / height;
-      }
-      _image.scaleX = scale;
-      _image.scaleY = scale;
     }
 
     private function handleEnabled(enabled:Boolean):void {
