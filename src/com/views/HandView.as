@@ -1,6 +1,5 @@
 package com.views
 {
-  import com.core.dataStructures.ArrayHelper;
   import com.core.dataStructures.Hash;
   import com.core.scene.ViewBase;
   import com.events.CardMessage;
@@ -125,7 +124,7 @@ package com.views
       if(!card) return null;
 
       var cardView:CardView = addChild(new CardView(card)) as CardView;
-      var pos:Object = nextCardPosition(cardView);
+      var pos:Object = nextCardPosition(cardView, numCards - 1);
       cardView.x = pos.x;
       cardView.y = pos.y;
       cardView.rotation = pos.rotation;
