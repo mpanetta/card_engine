@@ -111,7 +111,8 @@ package com.views
       addChild(_image);
 
       pivotX = _image.width / 2;
-      pivotY = _image.height;
+      pivotY = _image.height / 2;
+      _image.y = -_image.height / 2;
     }
 
     private function raise():void {

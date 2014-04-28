@@ -125,6 +125,11 @@ package com.views
       if(!card) return null;
 
       var cardView:CardView = addChild(new CardView(card)) as CardView;
+      var pos:Object = nextCardPosition(cardView);
+      cardView.x = pos.x;
+      cardView.y = pos.y;
+      cardView.rotation = pos.rotation;
+
       addCardListeners(cardView);
 
       _cards[cardView.id] = cardView;
@@ -194,7 +199,7 @@ package com.views
         addCard(card);
     }
 
-    private function fan():void {
+    private function fan(opts:Object):void {
       var i:int = 0;
       var card:CardView;
 
@@ -202,13 +207,13 @@ package com.views
         card = _cards[id];
 
         if(card) {
-          fanCard(card, i);
+          fanCard(card, i, opts);
           i++;
         }
       }
     }
 
-    private function fanCard(card:CardView, index:int):void {
+    private function fanCard(card:CardView, index:int, opts:Object):void {
       addChild(card);
       var trans:Object = nextCardPosition(card, index);
 
@@ -219,7 +224,10 @@ package com.views
 
       card.moving = true;
       Starling.juggler.tween(card, 0.33, { transition:Transitions.LINEAR,
-        x:trans.x, y:trans.y, rotation:trans.rotation, onComplete:function():void { card.moving = false; }
+        x:trans.x, y:trans.y, rotation:trans.rotation,
+        onComplete:function():void {
+          card.moving = false; if(!opts.noSound) SoundManager.instance.playTrack("cards", "cardSlap" + randomNumber(1, 6));
+        }
       });
     }
 
@@ -298,21 +306,18 @@ package com.views
     }
 
     private function fanRequest(options:Object):void {
-      fan()
+      fan(options)
     }
 
     private function totalOffset():Number {
-      return 0;
-      if(!_fanWidth) return 0;
+      if(!_fanWidth || _fanWidth <= CardManager.instance.cardWidth) return 0;
 
-      var offsets:Array = [];
-      for(var i:int = 0; i < numCards; i++)
-        offsets.push(aabbWidth(i));
-
-      return (_fanWidth - ArrayHelper.sum(offsets)) / 2;
+      return (_fanWidth - (aabbWidth(numCards - 1) + numCards * fanIncrement)) / 2;
     }
 
     private function aabbWidth(index:int):Number {
+      if(index < 0) return 0;
+
       var rot:Number = rotationFor(index);
       return CardManager.instance.cardHeight * Math.sin(rot) + CardManager.instance.cardWidth * Math.cos(rot);
     }
