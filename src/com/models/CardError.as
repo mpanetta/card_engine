@@ -15,6 +15,7 @@ package com.models
     public static const UNKOWN_STANDARD_SUIT:String = "Unkown suit num for standard suit.";
     public static const NO_ID:String = "Could not find object with id provided.";
     public static const MISSING_CARD_IMAGE:String = "Art for card could not be found.";
+    public static const UNKOWN_DIFFICULTY:String = "Attempted to pass an unsupported difficulty to the game";
 
     //
     // Instance variables.
