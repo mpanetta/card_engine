@@ -9,6 +9,7 @@ package com.managers
   import flash.events.EventDispatcher;
 
   import starling.display.Image;
+  import starling.textures.TextureAtlas;
 
   public class CardManager extends EventDispatcher
   {
@@ -86,7 +87,11 @@ package com.managers
     public function imageForCard(name:String):Image {
       for(var i:int = 0; i < _cardSheets.length; i++) {
         try {
-          return new Image(_cardSheets[i].getTexture(name));
+          if(_cardSheets[i] is TextureAtlas) {
+            return new Image(_cardSheets[i].getTexture(name));
+          } else {
+            return new Image(_cardSheets[i][name]);
+          }
         } catch(error:Error) {
           // Do nothing
         }

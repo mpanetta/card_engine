@@ -166,14 +166,6 @@ package com.views
       if(!_backgroundImage) return;
 
       scaleToFit(_backgroundImage, cw, ch);
-//      var p:Number = ch / cw < _backgroundImage.height / _backgroundImage.width ? cw / _backgroundImage.width : ch / _backgroundImage.height;
-//
-//      _backgroundImage.width *= p;
-//      _backgroundImage.height *= p;
-//      _backgroundImage.x = (cw - _backgroundImage.width) / 2;
-//      _backgroundImage.y = (ch - _backgroundImage.height) / 2;
-
-      _backgroundImage.blendMode = BlendMode.NONE;
     }
 
     private function scalePlayLayer(newWidth:Number, newHeight:Number):void {

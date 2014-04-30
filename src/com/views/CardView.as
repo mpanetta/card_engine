@@ -101,7 +101,6 @@ package com.views
       if(_image) {
         removeChild(_image);
 
-        _image.texture.dispose();
         _image.dispose();
         _image = null;
       }
