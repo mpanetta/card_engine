@@ -8,6 +8,7 @@ package com.views
   import com.models.CardError;
   import com.models.Hand;
   import com.models.Table;
+  import com.util.scaleToFit;
 
   import flash.display.Bitmap;
   import flash.utils.getDefinitionByName;
@@ -164,12 +165,13 @@ package com.views
     private function scaleBackground(cw:Number, ch:Number):void {
       if(!_backgroundImage) return;
 
-      var p:Number = ch / cw < _backgroundImage.height / _backgroundImage.width ? cw / _backgroundImage.width : ch / _backgroundImage.height;
-
-      _backgroundImage.width *= p;
-      _backgroundImage.height *= p;
-      _backgroundImage.x = (cw - _backgroundImage.width) / 2;
-      _backgroundImage.y = (ch - _backgroundImage.height) / 2;
+      scaleToFit(_backgroundImage, cw, ch);
+//      var p:Number = ch / cw < _backgroundImage.height / _backgroundImage.width ? cw / _backgroundImage.width : ch / _backgroundImage.height;
+//
+//      _backgroundImage.width *= p;
+//      _backgroundImage.height *= p;
+//      _backgroundImage.x = (cw - _backgroundImage.width) / 2;
+//      _backgroundImage.y = (ch - _backgroundImage.height) / 2;
 
       _backgroundImage.blendMode = BlendMode.NONE;
     }
