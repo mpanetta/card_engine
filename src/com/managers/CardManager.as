@@ -2,6 +2,7 @@ package com.managers
 {
   import com.core.dataStructures.ArrayHelper;
   import com.core.error.ErrorBase;
+  import com.engine.Engine;
   import com.models.Card;
   import com.models.CardError;
   import com.models.Deck;
@@ -9,6 +10,7 @@ package com.managers
   import flash.events.EventDispatcher;
 
   import starling.display.Image;
+  import starling.textures.Texture;
   import starling.textures.TextureAtlas;
 
   public class CardManager extends EventDispatcher
@@ -54,6 +56,8 @@ package com.managers
     public function get cardWidth():int { return _options.hasOwnProperty("cardWidth") ? _options.cardWidth : 50; }
     public function get cardHeight():int { return _options.hasOwnProperty("cardHeight") ? _options.cardHeight : 100; }
 
+    private function get assets():* { return Engine.instance.assetManager; }
+
     //
     // Public methods.
     //
@@ -85,6 +89,8 @@ package com.managers
     }
 
     public function imageForCard(name:String):Image {
+      return assets.cardImage(name);
+
       for(var i:int = 0; i < _cardSheets.length; i++) {
         try {
           if(_cardSheets[i] is TextureAtlas) {
