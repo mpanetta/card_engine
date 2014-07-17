@@ -226,6 +226,7 @@ package com.views
         x:trans.x, y:trans.y, rotation:trans.rotation,
         onComplete:function():void {
           card.moving = false; if(!opts.noSound) SoundManager.instance.playTrack("cards", "cardSlap" + randomNumber(1, 6));
+          Starling.juggler.removeTweens(card);
         }
       });
     }

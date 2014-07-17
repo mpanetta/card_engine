@@ -10,7 +10,6 @@ package com.managers
   import flash.events.EventDispatcher;
 
   import starling.display.Image;
-  import starling.textures.Texture;
   import starling.textures.TextureAtlas;
 
   public class CardManager extends EventDispatcher
@@ -27,6 +26,7 @@ package com.managers
 
     private var _options:Object;
     private var _cardSheets:Array = [];
+    private var _deck:Deck;
 
     //
     // Constructors.
@@ -63,13 +63,17 @@ package com.managers
     //
 
     public function createStandardDeck():Deck {
+      if(_deck) return _deck;
       var deck:Deck = new Deck();
       for(var i:int = 0; i < 52; i++) {
-        var card:Card = new Card(standardNameFor(i), false, i, standardFaceFor(i), standardSuitFor(i), valueFor(i));
+        var card:Card = new Card(standardNameFor(i), true, i, standardFaceFor(i), standardSuitFor(i), valueFor(i));
         deck.addCard(card);
+        imageForCard(card.imageFile);
+        card.flip();
       }
 
-      return deck;
+      _deck = deck;
+      return _deck;
     }
 
     public function findCard(cards:Array, face:String, suit:String):Card {
@@ -142,6 +146,29 @@ package com.managers
     private function valueFor(i):int {
       var x:int = i % 13;
       return x == 0 ? 13 : x;
+    }
+
+    private function imageFile(face:String, suit:String, faceUp:Boolean):String {
+      return "247_" + (faceUp ? fullSuit + "_" + face.toUpperCase() : "CardBack_III_Blank");
+    }
+
+    private function fullSuit(suit:String):String {
+      switch(suit) {
+        case "c":
+          return "Clubs";
+          break;
+        case "d":
+          return "Diamonds";
+          break;
+        case "h":
+          return "Hearts";
+          break;
+        case "s":
+          return "Spades";
+          break;
+        default:
+          throw new CardError(CardError.UNKOWN_STANDARD_SUIT, suit);
+      }
     }
 
     //
